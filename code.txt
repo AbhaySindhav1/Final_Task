@@ -1,0 +1,1141 @@
+priceing created = 31
+priceing getting = 32
+priceing editing = 33
+priceing deleting = 34
+
+
+      <div class="controller">
+        <label for="PickupPoint">Pickup Point</label>
+        <input
+          type="text"
+          name="PickupPoint"
+          id="PickupPoint"
+          class="form-control"
+          formControlName="PickupPoint"
+        />
+        <div
+          *ngIf="
+            (f.PickupPoint.touched || isSubmitted) && f.PickupPoint.invalid
+          "
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.PickupPoint.errors.required"
+            >PickupPoint is required.</span
+          >
+        </div>
+      </div>
+
+      <div
+        *ngFor="let stop of stops; let i = index"
+        class="controller"
+        style="position: relative"
+      >
+        <label for="Drop{{ i + 1 }}">Drop{{ i + 1 }}</label>
+        <input
+          type="text"
+          name="Drop{{ i + 1 }}"
+          id="Drop{{ i + 1 }}"
+          class="form-control"
+          formControlName="Drop{{ i + 1 }}"
+        />
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          style="
+            background-color: aliceblue;
+            position: absolute;
+            top: 50px;
+            right: 4%;
+            height: 16px;
+            display: inline-block;
+          "
+          (click)="removeDrop('Drop' + (i + 1))"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-x-circle-fill"
+            viewBox="0 0 16 16"
+            style="color: black"
+          >
+            <path
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+            />
+          </svg>
+
+          <br />
+        </button>
+        <div
+          *ngIf="[
+            ((f['Drop' + (i + 1)] && f['Drop' + (i + 1)].touched) ||
+              isSubmitted) &&
+              f['Drop' + (i + 1)] &&
+              f['Drop' + (i + 1)].invalid
+          ]"
+          style="color: #ff372e"
+        >
+          <span
+            *ngIf="
+              f['Drop' + (i + 1)] &&
+              f['Drop' + (i + 1)].errors?.required &&
+              ((f['Drop' + (i + 1)] && f['Drop' + (i + 1)].touched) ||
+                isSubmitted)
+            "
+            >Drop{{ i + 1 }} is required.</span
+          >
+        </div>
+      </div>
+
+      <div class="controller">
+        <label for="DropPoint">Drop Point</label>
+        <input
+          type="text"
+          name="DropPoint"
+          id="DropPoint"
+          class="form-control"
+          formControlName="DropPoint"
+        />
+        <div
+          *ngIf="(f.DropPoint.touched || isSubmitted) && f.DropPoint.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.DropPoint.errors.required"
+            >DropPoint is required.</span
+          >
+        </div>
+      </div>
+
+
+       <button
+          *ngIf="stops.length < 2"
+          type="button"
+          id="AddStop"
+          class="btn bg-success"
+          (click)="onAddStop()"
+        >
+          Add Stop
+        </button>
+
+
+          PickupPoint: new FormControl(null, [Validators.required]),
+      DropPoint: new FormControl(null, [Validators.required]),
+
+
+
+
+      /// data add user
+       // let formData = new FormData();
+
+    // formData.append('UserName', this.RideForm.get('UserName').value);
+    // formData.append('UserEmail', this.RideForm.get('UserEmail').value);
+    // formData.append('CountryCode', this.RideForm.get('CountryCode').value);
+    // formData.append('UserPhone', this.RideForm.get('UserPhone').value);
+    // if (!this.user) {
+    //   this.usersService.initUsers(formData).subscribe({
+    //     next: (data) => {
+    //       this.RideDetailsFormShow = true;
+    //       this.isSubmitted = false;
+    //       this.error = false;
+    //       setTimeout(() => {
+    //         this.setupAutocomplete('PickupPoint');
+    //         this.setupAutocomplete('DropPoint');
+    //       }, 1);
+    //     },
+    //     error: (error) => {
+    //       this.errMassage = error.error;
+    //       this.error = true;
+    //       return;
+    //     },
+    //   });
+    // } else {
+    //   this.RideDetailsFormShow = true;
+    //   this.isSubmitted = false;
+    //   this.error = false;
+    //
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+    app.post('/rides/assign-nearest', async (req, res) => {
+  const { rideId, pickupLocation } = req.body;
+
+  try {
+    // Find the nearest driver within a 10km radius
+    const drivers = await Driver.find({
+      location: {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [pickupLocation.longitude, pickupLocation.latitude]
+          },
+          $maxDistance: 10000
+        }
+      },
+      vehicleType: ride.vehicleType,
+      status: 'available'
+    }).sort({ distance: 1 });
+
+    if (drivers.length === 0) {
+      // No drivers found within the radius, update the ride status and notify the user
+      const ride = await Ride.findById(rideId);
+      ride.status = 'no-driver-found';
+      await ride.save();
+      // TODO: Notify the user that no driver was found
+      return res.send('No driver found');
+    }
+
+    // Assign the ride to the nearest driver
+    const driver = drivers[0];
+    const ride = await Ride.findById(rideId);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  OnInit,
+} from '@angular/core';
+import { Form } from '@angular/forms';
+import { StripeCardElementOptions, loadStripe } from '@stripe/stripe-js';
+
+interface Card {
+  imageUrl: string;
+  cardNumber: string;
+}
+
+@Component({
+  selector: 'app-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.css'],
+})
+export class CardComponent implements OnInit {
+  selectedCard: Card | any;
+  form: Form | any;
+  stripe: any;
+  
+   cardOptions: StripeCardElementOptions = {
+    style: {
+      base: {
+        iconColor: '#666EE8',
+        color: '#31325F',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#CFD7E0'
+        }
+      }
+    }
+  };
+  options: any = {
+    mode: 'car',
+    currency: 'usd',
+    // Fully customizable with appearance API.
+    appearance: {
+      /*...*/
+    },
+  };
+
+  // ngAfterViewInit(): void {
+  //   this.form = document.getElementById('payment-form');
+  //   let submitBtn = document.getElementById('submit');
+  //   console.log(this.form);
+  //   console.log(submitBtn);
+  // }
+
+  async loadStripe() {
+    this.stripe = await loadStripe(
+      'pk_test_51N93JqGPole4IExIKCJEeJeBeKyHTnvzng0TyDxVkWRypNfpHBpHOKVTmLJ2c7uRvdnRVTGvlbh2LsD95VEGWTdT00iQYhTiR0'
+    );
+    
+
+    const elements = this.stripe.elements();
+
+    const paymentElement = elements.create('card');
+    paymentElement.mount('#payment-element');
+  }
+  ngOnInit(): void {
+    this.loadStripe();
+  }
+
+  cards: Card[] = [
+    {
+      imageUrl:
+        'https://js.stripe.com/v3/fingerprinted/img/mastercard-4d8844094130711885b5e41b28c9848f.svg',
+      cardNumber: 'XXXX XXXX XXXX 7878',
+    },
+    {
+      imageUrl:
+        'https://js.stripe.com/v3/fingerprinted/img/mastercard-4d8844094130711885b5e41b28c9848f.svg',
+      cardNumber: 'XXXX XXXX XXXX 7978',
+    },
+    {
+      imageUrl:
+        'https://js.stripe.com/v3/fingerprinted/img/mastercard-4d8844094130711885b5e41b28c9848f.svg',
+      cardNumber: 'XXXX XXXX XXXX 8078',
+    },
+  ];
+
+  handleCardSelection(card: Card) {
+    this.selectedCard = card;
+    console.log('Selected Card Number:', card.cardNumber);
+  }
+
+  handleError = (error: any) => {};
+}
+
+
+
+
+
+
+       // if (!mongoose.Types.ObjectId.isValid(req.query.Value)) {
+    //   drivers = await Driver.find(
+    //     {
+    //       $or: [
+    //         { DriverName: regext },
+    //         { DriverEmail: regext },
+    //         { DriverPhone: regext },
+    //         { DriverCountry: regext },
+    //         { approval: regext },
+    //         { status: regext },
+    //         { ServiceType: regext },
+    //       ],
+    //     },
+    //     null, // Projection
+    //     {
+    //       sort: { [sortColumn]: 1 },
+    //     }
+    //   );
+    // } else {
+    //   drivers = await Driver.find(
+    //     {
+    //       $or: [
+    //         { DriverName: regext },
+    //         { DriverEmail: regext },
+    //         { DriverPhone: regext },
+    //         { DriverCity: regext },
+    //         { DriverCountry: regext },
+    //         { approval: regext },
+    //         { status: regext },
+    //         { ServiceType: regext },
+    //         { _id: new mongoose.Types.ObjectId(req.query.Value) },
+    //       ],
+    //     },
+    //     null, // Projection
+    //     {
+    //       sort: { [sortColumn]: 1 },
+    //     }
+    //   );
+    // }
+
+
+
+
+
+
+
+     //   if (mongoose.Types.ObjectId.isValid(Search)) {
+    //     Rides = await CreateRide.find({
+    //       $and: [
+    //         {
+    //           $or: [
+    //             { UserName: { $regex: Search } },
+    //             { user_id: new mongoose.Types.ObjectId(Search) },
+    //           ],
+    //         },
+    //         Status && Status !== "null" ? { Status: +Status } : {},
+    //         Type && mongoose.Types.ObjectId.isValid(Type) ? { type: mongoose.Types.ObjectId(Type) } : {},
+    //         FromDate && toDate !== "null"
+    //           ? {
+    //               ScheduleTime: {
+    //                 $gte: new Date(FromDate),
+    //                 $lte: new Date(toDate),
+    //               },
+    //             }
+    //           : {},
+    //       ],
+    //     });
+    //   } else {
+    //     Rides = await CreateRide.find({
+    //       $and: [
+    //         { $or: [{ UserName: { $regex: Search } }] },
+    //         Status ? { Status: Status } : {},
+    //         Type && mongoose.Types.ObjectId.isValid(Type) ? { type: mongoose.Types.ObjectId(Type) } : {},
+    //         FromDate && toDate !== "null"
+    //           ? {
+    //               ScheduleTime: {
+    //                 $gte: new Date(FromDate),
+    //                 $lte: new Date(toDate),
+    //               },
+    //             }
+    //           : {},
+    //       ],
+    //     });
+    //   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      //   io.emit("UpdateDriverStatus", driver);
+    //   io.emit("toSendDriver", { ride, driver });
+    // }
+
+    // socket.on("DriverResponse", async (data) => {
+    //   try {
+    //     let ride = await Ride.findByIdAndUpdate(data.id, { new: true });
+    //     if (data.response === "Accepted") {
+    //       ride.Status = "Accepted";
+    //       ride.Driver = driver.DriverName;
+    //       ride.DriverId = driver._id;
+    //       await driver.save();
+    //       await ride.save();
+    //       io.emit("AssignedReqAccepted", {
+    //         id: ride._id,
+    //         Status: "Accepted",
+    //         Driver: driver.DriverName,
+    //       });
+    //     } else if (data.response === "Declined") {
+    //       driver.status = "online";
+    //       ride.Status = "pending";
+    //       ride.Driver = null;
+    //       await driver.save();
+    //       await ride.save();
+    //       io.emit("AssignedReqDeclined", {
+    //         id: ride._id,
+    //         Status: ride.Status,
+    //         Driver: "Assigning",
+    //       });
+    //       io.emit("UpdateDriverStatus", driver);
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // });
+
+
+
+
+
+
+
+
+
+
+
+  onDelete(city: any) {
+    this.cityService.initDeleteCountry(city._id).subscribe({
+      next: (data) => {
+        this.cityService.initGetAllCities().subscribe({
+          next: (data) => {
+            this.Citylist = data;
+          },
+          error: (error) => {
+            this.error = error;
+            this.changed = false;
+          },
+        });
+      },
+      error: (error) => {
+        this.error = error;
+        this.changed = false;
+      },
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+    // initDistanceMatrix() {
+  //   this.ways = [];
+  //   for (let index = 1; index <= this.stops.length; index++) {
+  //     this.ways.push(
+  //       (document.getElementById(`Drop${index}`) as HTMLInputElement).value
+  //     );
+  //   }
+  //   this.ways.push(
+  //     (document.getElementById('DropPoint') as HTMLInputElement).value
+  //   );
+
+  //   let service = new google.maps.DistanceMatrixService();
+  //   service.getDistanceMatrix(
+  //     {
+  //       origins: [
+  //         (document.getElementById('PickupPoint') as HTMLInputElement).value,
+  //       ],
+  //       destinations: this.ways,
+  //       travelMode: 'DRIVING',
+  //     },
+
+  //     (response: any, status: any) => {
+  //       if (status === 'OK') {
+  //         let total_distance = 0.0;
+  //         let total_time = 0.0;
+
+  //         for (let i = 0; i < response.rows[0].elements.length; i++) {
+  //           total_distance += response.rows[0].elements[i].distance.value;
+  //           total_time += response.rows[0].elements[i].duration.value;
+  //         }
+  //         // this.Distance = total_distance / 1000;
+  //         // this.Time =
+  //         //   Math.floor(total_time / 3600) +
+  //         //   '.' +
+  //         //   Math.floor((total_time % 3600) / 60);
+  //         // this.tripDetails.Distance = total_distance / 1000 + 'Km';
+  //         // const hours = Math.floor(total_time / 3600);
+  //         // const minutes = Math.floor((total_time % 3600) / 60);
+  //         // this.tripDetails.Time = `${hours} hr ${minutes} min`;
+  //         // this.calculateFee();
+  //       } else if (status === 'ZERO_RESULTS') {
+  //         this.toastr.error('No Route Are Available');
+  //       }
+  //     }
+  //   );
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const Driver = require("../../Model/driverModel");
+const Rides = require("../../Model/createRideModel");
+
+const { getAvailableDrivers } = require("./functions");
+
+const { default: mongoose } = require("mongoose");
+
+const users = {};
+
+module.exports = function (io) {
+  io.on("connection", (socket) => {
+    socket.on("login", (userId) => {
+      console.log(userId);
+      users[userId] = socket.id;
+      console.log(users);
+    });
+
+    socket.on("ride", async (data) => {
+      console.log(data);
+      if (!data) return;
+      if (data.Status == 0) {
+        console.log(data);
+        CancelRide(data.rideID, data.driverID);
+      }
+      if (data.Status == "Assign") {
+        AssignRide(data.rideID, data.driverID);
+      }
+    });
+
+    socket.on("DriverResponse", async (data) => {
+      if (!data) return;
+      if (data.Status == 0) {
+        console.log(data);
+        CancelRide(data.Ride._id, data.Ride.DriverId);
+      } else if (data.Status == 1) {
+        NotReactedRide(data.Ride._id, data.Status);
+      }
+      if (data.Status == 2) {
+        AcceptRide(data.Ride._id, data.Ride.DriverId, data.Status);
+      }
+    });
+
+    socket.on("RideAssignNearestDriver", async (RideID) => {
+      try {
+        let ride = await Rides.findById(RideID);
+        let drivers = await getAvailableDrivers();
+        if (!drivers.length > 0) return;
+        const driver = drivers.find((driver) =>
+          driver.DriverCity.equals(ride.RideCity)
+        );
+        await AssignRide(RideID, driver._id);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  });
+
+  /////////////////////////////////////////////////////////////       Assign Driver to  Ride    ////////////////////////////////////////////////////////////////////////
+
+  AssignRide = async (RideID, AsDriverID) => {
+    let rides = await Rides.findById(RideID);
+    if (rides.Status != 1) return;
+
+    let AssignDriver = await Driver.findById(AsDriverID);
+    if (!AssignDriver) return;
+    AssignDriver.status = "busy";
+    await AssignDriver.save();
+
+    // let ride = await Rides.findByIdAndUpdate(RideID, {
+    //   Status: 100,
+    //   DriverId: new mongoose.Types.ObjectId(AssignDriver._id),
+    //   Driver: AssignDriver.DriverName,
+    // });
+
+    rides.Status = 100;
+    rides.DriverId = new mongoose.Types.ObjectId(AssignDriver._id);
+    rides.Driver = AssignDriver.DriverName;
+    rides.AssignTime = Date.now();
+    await rides.save();
+
+    if (!rides) return;
+
+    rides = await GetRideDetail(rides._id);
+
+    io.emit("reqtoSendDriver", rides);
+  };
+
+  /////////////////////////////////////////////////////////////        Driver Accepted  Ride    ////////////////////////////////////////////////////////////////////////
+
+  AcceptRide = async (RideID, DriverID, Status) => {
+    if (!RideID) return;
+    if (!mongoose.Types.ObjectId.isValid(DriverID)) return;
+    let AssignDriver = await Driver.findByIdAndUpdate(
+      DriverID,
+      { status: "busy" },
+      { new: true }
+    );
+    let ride = await Rides.findByIdAndUpdate(RideID, {
+      Status: Status,
+      DriverId: new mongoose.Types.ObjectId(DriverID),
+      Driver: AssignDriver.DriverName,
+    });
+
+    let FullRideDetail = await GetRideDetail(ride._id);
+
+    io.emit("ReqAcceptedByDriver", FullRideDetail);
+  };
+
+  ///////////////////////////////////////////////////////////////       Cancel Ride          //////////////////////////////////////////////////////////////////////
+
+  CancelRide = async (RideID, DriverID) => {
+    try {
+      let ride = await Rides.findByIdAndUpdate(RideID, {
+        Status: 0,
+      });
+
+      ride = await GetRideDetail(ride._id);
+
+      if (mongoose.Types.ObjectId.isValid(ride.DriverId)) {
+        let FoundDriver = await Driver.findByIdAndUpdate(
+          DriverID,
+          { status: "online" },
+          { new: true }
+        );
+        io.emit("CancelledRide", {
+          Ride: { Status: ride.Status, RideId: ride._id },
+          Driver: { DriverID: FoundDriver._id, Status: FoundDriver.status },
+        });
+      } else {
+        io.emit("CancelledRide", {
+          Ride: { Status: ride.Status, RideId: ride._id },
+        });
+      }
+
+      console.log("ride", "dfsdjhcsh");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  module.exports.AssignRide = AssignRide;
+};
+
+///////////////////////////////////////////////////////////////       Not Reject  Ride          //////////////////////////////////////////////////////////////////////
+
+NotReactedRide = async (RideID) => {
+  try {
+    let ride = await Rides.findById(RideID);
+
+    ride = await GetRideDetail(ride._id);
+
+    if (mongoose.Types.ObjectId.isValid(ride.DriverId)) {
+      let FoundDriver = await Driver.findByIdAndUpdate(
+        ride.DriverId,
+        { status: "online" },
+        { new: true }
+      );
+
+      ride.Status = 1;
+      ride.DriverId = null;
+      ride.Driver = null;
+
+      await ride.save();
+
+      io.emit("NotReactedRide", {
+        ride,
+        Driver: { DriverID: FoundDriver._id, Status: FoundDriver.status },
+      });
+    } else {
+      io.emit("NotReactedRide", {
+        ride,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+///////////////////////////////////////////////////////////////       Get  FUll  Ride          //////////////////////////////////////////////////////////////////////
+
+async function GetRideDetail(ID) {
+  const ride = await Rides.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(ID),
+      },
+    },
+    {
+      $lookup: {
+        from: "myusers",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userInfo",
+      },
+    },
+    {
+      $unwind: "$userInfo",
+    },
+    {
+      $lookup: {
+        from: "drivers",
+        localField: "DriverId",
+        foreignField: "_id",
+        as: "DriverInfo",
+      },
+    },
+    {
+      $unwind: "$DriverInfo",
+    },
+    {
+      $lookup: {
+        from: "taxis",
+        localField: "type",
+        foreignField: "_id",
+        as: "VehicleInfo",
+      },
+    },
+    {
+      $unwind: "$VehicleInfo",
+    },
+  ]);
+  return ride[0];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////                                              ///  Edit  Ride ///                                                                   ///
+
+// router.patch("/Ride/:id", auth, upload.none(), async (req, res) => {
+//   let fieldtoupdate = Object.keys(req.body);
+//   if ((req.body.DriverId === "undefined") | null | "null" | "") {
+//     req.body.DriverId = null;
+//   } else if (
+//     req.body.DriverId &&
+//     !mongoose.Types.ObjectId.isValid(req.body.DriverId)
+//   ) {
+//   }
+
+//   try {
+//     const Ride = await CreateRide.findById(req.params.id);
+//     // const driver = await Driver.findByIdAndUpdate(
+//     //   { _id: req.body.DriverId },
+//     //   { status: "online" },
+//     //   { new: true }
+//     // );
+//     fieldtoupdate.forEach((field) => {
+//       Ride[field] = req.body[field];
+//     });
+//     await Ride.save();
+//     res.status(200).json({ change: "updated", Ride });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json(error);
+//   }
+// });
+
+////                                              ///  Ride History   ///                                                                   ///
+
+// router.get("/Ride/History", async (req, res) => {
+//   try {
+//     const Rides = await CreateRide.find({
+//       $or: [{ Status: 0 }, { Status: 6 }],
+//     });
+//     res.status(200).send(Rides);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).send(error);
+//   }
+// });
+
+
+
+
+
+
+
+
+//                                                        //   Delete   Country  //                                                                          //
+
+router.delete("/city/:id", auth, async (req, res) => {
+  try {
+    const city = await City.findByIdAndDelete(req.params.id);
+    if (!city) {
+      return new Error("city not Found");
+    }
+    res.status(200).send(city);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+
+
+
+
+
+
+
+// ////                                              ///  Get All Pending And Assigning Ride ///                                                                   ///
+
+// router.post("/Rides", async (req, res) => {
+//   const limit = req.body.limit || 10;
+//   const page = req.body.page || 1;
+
+//   const options = {
+//     skip: (page - 1) * limit,
+//     limit: limit,
+//   };
+
+//   try {
+//     const totalRide = await CreateRide.countDocuments([
+//       {
+//         $lookup: {
+//           from: "myusers",
+//           localField: "user_id",
+//           foreignField: "_id",
+//           as: "userInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$userInfo",
+//       },
+//       {
+//         $lookup: {
+//           from: "taxis",
+//           localField: "type",
+//           foreignField: "_id",
+//           as: "VehicleInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$VehicleInfo",
+//       },
+//       // Add additional stages to the pipeline if needed
+//     ]);
+
+//     const rides = await CreateRide.aggregate([
+//       {
+//         $lookup: {
+//           from: "myusers",
+//           localField: "user_id",
+//           foreignField: "_id",
+//           as: "userInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$userInfo",
+//       },
+//       {
+//         $lookup: {
+//           from: "taxis",
+//           localField: "type",
+//           foreignField: "_id",
+//           as: "VehicleInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$VehicleInfo",
+//       },
+//       // Add additional stages to the pipeline if needed
+//     ])
+//       .skip(options.skip)
+//       .limit(options.limit);
+
+//     console.log(rides.length);
+//     res.status(200).send({ rides, totalRide });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).send(error);
+//   }
+// });
+
+// ////                                              ///  Get All Assignd and Other Ride ///                                                                   ///
+
+// router.get("/Ride/Assigned", async (req, res) => {
+//   try {
+//     const rides = await CreateRide.aggregate([
+//       {
+//         $lookup: {
+//           from: "myusers",
+//           localField: "user_id",
+//           foreignField: "_id",
+//           as: "userInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$userInfo",
+//         preserveNullAndEmptyArrays: true,
+//       },
+//       {
+//         $lookup: {
+//           from: "taxis",
+//           localField: "type",
+//           foreignField: "_id",
+//           as: "VehicleInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$VehicleInfo",
+//         preserveNullAndEmptyArrays: true,
+//       },
+//       {
+//         $lookup: {
+//           from: "drivers",
+//           localField: "DriverId",
+//           foreignField: "_id",
+//           as: "DriverInfo",
+//         },
+//       },
+//       {
+//         $unwind: {
+//           path: "$DriverInfo",
+//           preserveNullAndEmptyArrays: true,
+//         },
+//       },
+//     ]);
+//     res.status(200).send(rides);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).send(error);
+//   }
+// });
+
+// ////                                              ///  Filter  Ride ///                                                                   ///
+
+// router.post("/RideFilter", upload.none(), auth, async (req, res) => {
+//   let { Search, Status, Type, FromDate, toDate } = req.body;
+
+//   const options = {
+//     skip: (page - 1) * limit,
+//     limit: limit,
+//   };
+//   try {
+//     let Rides = await CreateRide.aggregate([
+//       {
+//         $lookup: {
+//           from: "taxis",
+//           localField: "type",
+//           foreignField: "_id",
+//           as: "VehicleInfo",
+//         },
+//       },
+//       {
+//         $unwind: "$VehicleInfo",
+//       },
+//       {
+//         $match: {
+//           $and: [
+//             Search && Search !== "null"
+//               ? mongoose.Types.ObjectId.isValid(Search)
+//                 ? { user_id: new mongoose.Types.ObjectId(Search) }
+//                 : { UserName: { $regex: Search, $options: "i" } }
+//               : {},
+
+//             Status && Status !== "null" ? { Status: +Status } : {},
+//             FromDate && toDate !== "null"
+//               ? {
+//                   ScheduleTime: {
+//                     $gte: new Date(FromDate),
+//                     $lte: new Date(toDate),
+//                   },
+//                 }
+//               : {},
+//             Type && mongoose.Types.ObjectId.isValid(Type)
+//               ? { type: new mongoose.Types.ObjectId(Type) }
+//               : {},
+//           ],
+//         },
+//       },
+//     ]);
+
+//     res.status(200).json(Rides);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ // let { Search, Status, Type, FromDate, toDate } = req.body.filter;
+    // let filterConditions = [];
+    // console.log(req.body.filter);
+
+    // if (Search && Search !== null && Search !== "null") {
+    //   if (mongoose.Types.ObjectId.isValid(Search)) {
+    //     filterConditions.push({
+    //       _id: new mongoose.Types.ObjectId(Search),
+    //     });
+    //   } else {
+    //     filterConditions.push({
+    //       $or: [
+    //         { "userInfo.UserName": { $regex: Search, $options: "i" } },
+    //         { "userInfo.UserPhone": { $regex: Search, $options: "i" } },
+    //         { PickupPoint: { $regex: Search, $options: "i" } },
+    //         { DropPoint: { $regex: Search, $options: "i" } },
+    //       ],
+    //     });
+    //   }
+    // }
+
+    // if (Status && Status !== null && Status !== "null") {
+    //   filterConditions.push({ Status: +Status });
+    // }
+
+    // if (FromDate !== null && FromDate !== "null" && FromDate) {
+    //   filterConditions.push({
+    //     ScheduleTime: {
+    //       $gte: new Date(FromDate),
+    //     },
+    //   });
+    // }
+    // if (toDate !== null && toDate !== "null" && toDate) {
+    //   filterConditions.push({
+    //     ScheduleTime: {
+    //       $lte: new Date(toDate),
+    //     },
+    //   });
+    // }
+
+    // if (Type && mongoose.Types.ObjectId.isValid(Type)) {
+    //   filterConditions.push({ type: new mongoose.Types.ObjectId(Type) });
+    // }
+
+    // if (filterConditions.length > 0) {
+    //   filterMatchQuery = {
+    //     $and: filterConditions,
+    //   };
+    // }
+
+
+    // recieveMessasging() {
+//     this.afm.messages.subscribe(
+//       (payload) => {
+//         // console.log('new msg recieved',payload.data);
+//         const notificationTitle = payload.notification?.title;
+
+//         // const notificationOptions = {
+//         //   body: payload.notification.body
+//         // };
+//         const notificationOptions = {
+//           body: payload.notification.body,
+//           icon: "/assets/img/icons/history.png",
+//           vibrate: [200, 100, 200],
+//           sound: "/assets/soundss/success-fanfare-trumpets-6185.mp3",
+//         };
+
+//         new Notification(notificationTitle, notificationOptions);
+//         // this.currentMessage.next(payload)
+//       },
+//       (err) => {
+//         console.log(err);
+//       }
+//     );
+//   }

@@ -1,0 +1,38 @@
+div:not(.card-body) {
+  font-size: 18px;
+  margin: 5px 0px;
+}
+
+.title {
+  width: 150px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.Value {
+  display: inline-block;
+  margin-left: 50px !important; 
+  width: 400px;
+}
+
+.Stops {
+  display: inline-block;
+  margin-left: 0px !important; 
+  width: 400px;
+}
+h1 {
+  padding: 0;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 30px;
+}
+
+.body {
+  padding: 30px;
+}
+
+#map{
+  width: 70%;
+  height: 300px;
+  margin: 20px auto;
+}

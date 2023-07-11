@@ -1,0 +1,77 @@
+<div class="login-container">
+    <div>
+      <h2>Sign Up</h2>
+      <div class="signIn card">
+        <div style="width: 100%; text-align: center">
+          <mat-icon style="font-size: 50px; height: 50px; width: 50px">
+            person_pin</mat-icon
+          >
+        </div>
+        <form id="login-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+            <!-- <div class="row">
+                <label for="profile" class="form-label">Profile Picture</label>
+                <input type="file" id="profile" name="profile"    class="form-control" placeholder="profile Picture" (change)="onFileSelected($event)"> 
+            </div> -->
+            <div class="row">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" id="Name" name="Name" formControlName="Name"   class="form-control" placeholder="Enter Your Name"> 
+            </div>
+          <div class="row">
+            <label for="LoginEmail" class="form-label">Email</label>
+            <input
+              type="email"
+              id="LoginEmail"
+              class="form-control"
+              name="LoginEmail"
+              formControlName="email"
+              placeholder="Enter Your Email"
+            />
+          </div>
+          <span
+          *ngIf="!signUpForm.get('email').valid && signUpForm.get('email')?.touched"
+          class="help-block">Please enter a valid email!</span>
+          <div class="row">
+            <label for="LoginPassWord" class="form-label">Password</label>
+            <input
+              type="password"
+              name="LoginPassWord"
+              class="form-control"
+              formControlName="password"
+              id="LoginPassWord"
+              placeholder="Enter Your Password"
+              required
+            />
+          </div>
+          <div
+          *ngIf="
+            signUpForm.get('password').invalid &&
+            (
+              signUpForm.get('password').touched)
+          "
+        >
+          <div *ngIf="signUpForm.get('password').errors.required && signUpForm.get('password').touched">
+            Password is required.
+          </div>
+          <div *ngIf="signUpForm.get('password').errors.minlength && signUpForm.get('password').touched">
+            Password must be at least 8 characters long.
+          </div>
+          <div *ngIf="signUpForm.get('password').errors.maxlength && signUpForm.get('password').touched">
+            Password cannot be longer than 20 characters.
+          </div>
+          <div *ngIf="signUpForm.get('password').errors.pattern && signUpForm.get('password').touched" >
+            Password must contain at least one letter and one number and One Special Character.
+          </div>
+        </div>
+        <div style="width: 100%; text-align: center;">
+          
+          <button type="submit" class="btn btn-primary" id="logInBtn" [disabled]="!signUpForm.valid">
+            Sign Up
+          </button>
+          <br>
+          <a [routerLink]="['']" style="text-decoration: none ;" > Click to Login </a>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

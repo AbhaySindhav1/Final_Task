@@ -1,0 +1,84 @@
+#staticBackdrop {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+#staticBackdrop h4 {
+  font-size: 18px;
+  font-weight: 500;
+}
+#staticBackdrop p {
+  font-size: 18px;
+  font-weight: 400;
+}
+table th {
+  text-align: center;
+  padding: 10px;
+  vertical-align: middle;
+}
+.table-city {
+  width: 95%;
+  background-color: white;
+  font-weight: 600;
+  margin: 20px auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.table-city th {
+  font-size: 15px;
+  font-weight: bolder;
+  border: 1px solid white;
+}
+.table-city td,
+.table-city th {
+  text-align: center;
+  padding: 10px;
+  vertical-align: middle;
+}
+.ellipsisRow {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsisRow;
+}
+thead {
+  background-color: #6d7ae0;
+  height: 50px;
+  color: white;
+}
+table {
+  margin: 10px 50px;
+}
+.d-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.d-column label {
+  margin: 5px 40px;
+}
+.d-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.paginationlink /deep/ .ngx-pagination .current {
+  background: rgb(82, 133, 244);
+  border-radius: 50%;
+
+}
+
+.paginationlink /deep/ .ngx-pagination {
+  padding: 7px;
+  margin: 7px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 10px rgb(82, 133, 244)    ;
+}
+
+.paginationlink /deep/ .ngx-pagination .ng-star-inserted {
+  text-decoration: none;
+}
+
+
+.ellipsisRow{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

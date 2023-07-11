@@ -1,0 +1,183 @@
+<div style="margin: 35px auto 20px 45px">
+  <h1 style="font-family: candara; font-weight: 600; font-size: 2.5rem">
+    Ride History
+  </h1>
+</div>
+<div>
+  <Form id="Filter-container" [formGroup]="RideSearchForm">
+    <div class="Status-select select d-column">
+      <label for="Status">Select Status</label>
+      <select id="Status" name="Status" formControlName="Status">
+        <option value="null" selected>Select Status</option>
+
+        <option value="0">Cancelled</option>
+        <!-- <option value="1">Pending</option>
+        <option value="2">Accepted</option>
+        <option value="3">Arrived</option>
+        <option value="4">Started</option> -->
+        <option value="5">Completed</option>
+        <!-- <option value="100">Assigning</option> -->
+      </select>
+    </div>
+    <div class="Vehicle-select select d-column">
+      <label for="Status">Select Vehicle</label>
+      <select id="Type" name="Type" formControlName="Type">
+        <option value="null" selected hidden>Select Vehicle</option>
+
+        <option value="{{ Vehicle._id }}" *ngFor="let Vehicle of VehicleList">
+          {{ Vehicle.types }}
+        </option>
+      </select>
+    </div>
+
+    <div class="Vehicle-select select d-flex">
+      <div class="d-column">
+        <label for="FromDate">From : </label>
+        <input type="datetime-local" formControlName="FromDate" id="FromDate" />
+      </div>
+      <div class="d-column">
+        <label for="toDate">To : </label>
+        <input type="datetime-local" formControlName="toDate" id="toDate" />
+      </div>
+    </div>
+    <div class="Vehicle-select select d-column">
+      <label for="Search">Search </label>
+      <input
+        type="text"
+        formControlName="Search"
+        id="Search"
+        placeholder="username , phone number, request id "
+      />
+    </div>
+
+    <button
+      type="button"
+      style="
+        background-color: #c5c4c4;
+        color: black;
+        width: 100px;
+        height: 40px;
+        margin-top: auto;
+      "
+      (click)="Filter()"
+    >
+      Apply
+    </button>
+  </Form>
+</div>
+<button type="button" class="Btn" id="DownloadBtn" (click)="DownloadHistory()">Download</button>
+<select
+  [(ngModel)]="limit"
+  style="
+    width: 100px;
+    float: right;
+    margin: 50px 50px 0px auto;
+    background-color: #6d7ae075;
+    border-radius: 10px;
+  "
+  (change)="page = 1; GetRideHistory()"
+>
+  <option value="2">2</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+</select>
+
+<div class="ct-table-container">
+  <table class="table-city">
+    <thead>
+      <tr>
+        <th class="ellipsisRow">Ride ID</th>
+        <th class="ellipsisRow">User Name</th>
+        <th class="ellipsisRow">PickUp Point</th>
+        <th class="ellipsisRow">Drop Point</th>
+        <th class="ellipsisRow">Driver</th>
+        <th class="ellipsisRow">Status</th>
+        <th style="min-width: 150px">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngIf="RideList?.length == 0"
+        style="text-align: center; vertical-align: middle"
+      >
+        <td colspan="8">No Rides</td>
+      </tr>
+      <tr
+        *ngFor="
+          let Ride of RideList
+            | paginate
+              : {
+                  itemsPerPage: +limit,
+                  currentPage: +page,
+                  totalItems: +totalRides
+                }
+        "
+      >
+        <td class="ellipsisRow" title="{{ Ride._id }}">{{ Ride._id }}</td>
+        <td class="ellipsisRow" title="{{ Ride.UserName }}">
+          {{ Ride.UserName | uppercase }}
+        </td>
+        <td class="ellipsisRow" title="{{ Ride.PickupPoint }}">
+          {{ Ride.PickupPoint }}
+        </td>
+        <td class="ellipsisRow" title="{{ Ride.DropPoint }}">
+          {{ Ride.DropPoint }}
+        </td>
+
+        <td class="ellipsisRow" title="{{ Ride.Driver }}">
+          {{ Ride.Driver || "No Driver" | uppercase }}
+        </td>
+
+        <td class="ellipsisRow" title="{{ Ride.Status }}">
+          {{
+            Ride.Status === 0
+              ? "Cancelled"
+              : Ride.Status === 5
+              ? "Completed"
+              : ""
+          }}
+        </td>
+        <td>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-evenly;
+            "
+          >
+            <button
+              class="btn btn-primary"
+              style="padding: 8px; background-color: #6d7ae0"
+              (click)="openDialog(Ride)"
+            >
+              <!-- data-toggle="modal"
+                data-target="#staticBackdrop" -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-info-circle"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                />
+                <path
+                  d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+                />
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div style="float: right; margin-right: 50px; margin: 0px 40px 40px auto">
+  <pagination-controls
+    class="paginationlink"
+    (pageChange)="Filter($event)"
+  ></pagination-controls>
+</div>

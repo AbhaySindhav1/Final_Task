@@ -1,0 +1,81 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.card {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px #888888;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+table th {
+  text-align: center;
+  padding: 10px;
+  vertical-align: middle;
+}
+.tables {
+  width: 95%;
+  background-color: white;
+  font-weight: 600;
+  margin: 20px auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.tables th {
+  font-size: 15px;
+  font-weight: bolder;
+  border: 1px solid white;
+}
+.tables td,
+.tables th {
+  text-align: center;
+  padding: 10px;
+  vertical-align: middle;
+}
+.ellipsisRow {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsisRow;
+}
+thead {
+  background-color: #6d7ae0;
+  height: 50px;
+  color: white;
+}
+tbody {
+  background-color: aliceblue;
+}
+table {
+  margin: 10px 50px;
+}
+
+.Button {
+  background-color: #6d7ae0;
+  color: white;
+  min-width: 70px;
+  padding: 10px 15px;
+  height: 45px;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

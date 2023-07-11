@@ -1,0 +1,108 @@
+<div class="Payment">
+  <img
+    src="http://localhost:3000/uploads/cards/close.svg"
+    width="20px"
+    style="margin: 10px 20px 10px auto; cursor: pointer; float: right"
+    alt="X"
+    srcset=""
+    mat-dialog-close
+  />
+  <div class="body">
+    <div class="card-body">
+      <h1>Ride Details</h1>
+    </div>
+    <div style="padding: 20px; overflow: scroll">
+      <ul>
+        <li>
+          <div class="title">RideID</div>
+          :
+          <div class="Value">{{ data?._id }}</div>
+        </li>
+        <li>
+          <div class="title">UserID</div>
+          :
+          <div class="Value">{{ data?.userInfo?._id }}</div>
+        </li>
+        <li>
+          <div class="title">UserName</div>
+          :
+          <div class="Value">{{ data?.userInfo?.UserName }}</div>
+        </li>
+        <li>
+          <div class="title">User Contact</div>
+          :
+          <div class="Value">{{ data?.userInfo?.UserPhone }}</div>
+        </li>
+        <li>
+          <div class="title">User EmailID</div>
+          :
+          <div class="Value">{{ data?.userInfo?.UserEmail }}</div>
+        </li>
+        <li>
+          <div class="title">Vehicle Type</div>
+          :
+          <div class="Value">{{ data?.VehicleInfo?.types }}</div>
+        </li>
+        <li>
+          <div class="title">Pickup Point</div>
+          :
+          <div class="Value">{{ data?.PickupPoint }}</div>
+        </li>
+        <li>
+          <div class="title">Drop Point</div>
+          :
+          <div class="Value">{{ data?.DropPoint }}</div>
+        </li>
+        <li>
+          <div class="title">Ride Timing</div>
+          :
+          <div class="Value">{{ data?.ScheduleTime }}</div>
+        </li>
+        <li>
+          <div class="title">Distance</div>
+          :
+          <div class="Value">{{ data?.Distance }}</div>
+        </li>
+        <li>
+          <div class="title">Time</div>
+          :
+          <div class="Value">{{ data?.Time }}</div>
+        </li>
+        <li>
+          <div class="title">Payments</div>
+          :
+          <div
+            class="Value"
+            *ngIf="data?.PaymentType == 'Cash' || !data?.PaymentType"
+          >
+            Cash
+          </div>
+          <div
+            class="Value"
+            *ngIf="data?.PaymentType && data?.PaymentType != 'Cash'"
+          >
+            Card: {{ data?.PaymentId }}
+          </div>
+        </li>
+        <li>
+          <div class="title">Stops</div>
+          :
+          <div class="Value">
+            {{ data?.Stops.length === 0 ? "No Stops" : "" }}
+            <ng-container *ngIf="data?.Stops.length > 0">
+              <span class="Stops" *ngFor="let item of data?.Stops">
+                {{ item.trim().length > 0 ? item.trim() : "No Stops" }}
+              </span>
+            </ng-container>
+          </div>
+        </li>
+        <li>
+          <div class="title">Estimated Fare</div>
+          :
+          <div class="Value">{{ data?.TripFee }}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div *ngIf="data.Map" id="map"></div>
+</div>

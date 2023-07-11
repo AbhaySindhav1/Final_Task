@@ -1,0 +1,378 @@
+<div class="container" style="width: 100vw">
+  <div class="form-container">
+    <form id="PricingForm" [formGroup]="PricingForm">
+      <div class="input-group mb-3">
+        <label for="CountryDrop"> Country </label>
+        <select
+          id="CountryDrop"
+          name="CountryDrop"
+          (change)="onCountrySelect()"
+          formControlName="country"
+          #PricingCountry
+        >
+          <option value="null" selected hidden>Select Country</option>
+          <option value="{{ Country._id }}" *ngFor="let Country of ContryList">
+            {{ Country.countryname }}
+          </option>
+        </select>
+        <span
+          *ngIf="issubmitted && !PricingForm.get('country')?.valid"
+          class="alert alert-danger"
+          style="
+            width: 190px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+          role="alert"
+          >Country Is Required</span
+        >
+      </div>
+      <div class="input-group mb-3">
+        <label for="CityDrop"> City </label>
+        <select id="CityDrop" name="CityDrop" formControlName="city">
+          <option value="" selected hidden>Select City</option>
+          <option value="{{ City._id }}" *ngFor="let City of CityList">
+            {{ City.city }}
+          </option>
+          <option value="" *ngIf="CityList.length === 0">
+            No Available City
+          </option>
+        </select>
+        <span
+          *ngIf="issubmitted && !PricingForm.get('city')?.valid"
+          class="alert alert-danger"
+          style="
+            width: 190px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+          role="alert"
+          >*City Is Required</span
+        >
+      </div>
+      <div class="input-group mb-3">
+        <label for="TypeDrop"> Type </label>
+        <select id="TypeDrop" name="TypeDrop" formControlName="type">
+          <option value="null" selected hidden>Select Vehicle Type</option>
+          <option value="{{ Vehicle._id }}" *ngFor="let Vehicle of VehicleList">
+            {{ Vehicle.types }}
+          </option>
+        </select>
+        <span
+          *ngIf="issubmitted && !PricingForm.get('type')?.valid"
+          class="alert alert-danger"
+          style="
+            width: 190px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+          role="alert"
+          >*type Is Required</span
+        >
+      </div>
+      <div class="second div">
+        <div class="input-group mb-3">
+          <label for="DriverProfitInp"> Driver Profit </label>
+          <input
+            type="number"
+            min="0"
+            placeholder="Driver Profit"
+            id="DriverProfitInp"
+            formControlName="DriverProfit"
+            onKeyPress="if(this.value.length==2) return false;"
+          />
+          <span
+            *ngIf="issubmitted && !PricingForm.get('DriverProfit')?.valid"
+            class="alert alert-danger"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            role="alert"
+            >*DriverProfit Is Required and must be positive</span
+          >
+        </div>
+        <div class="input-group mb-3">
+          <label for="MinFare">Min Fare Value</label>
+          <input
+            type="number"
+            min="0"
+            placeholder="Min Fare Value"
+            id="MinFare"
+            formControlName="MinFarePrice"
+            onKeyPress="if(this.value.length==3 || event.keyCode === 43) return false;"
+          />
+          <span
+            *ngIf="issubmitted && !PricingForm.get('MinFarePrice')?.valid"
+            class="alert alert-danger"
+            role="alert"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            >*MinFarePrice Is Required</span
+          >
+        </div>
+        <div class="input-group mb-3">
+          <label for="BasePriceDistance"> Distance For Base Price</label>
+          <select
+            name="BasePriceDistance"
+            id="BasePriceDistance"
+            formControlName="BasePriceDistance"
+          >
+            <option value="" selected hidden>Distance For Base Price</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <span
+            *ngIf="issubmitted && !PricingForm.get('BasePriceDistance')?.valid"
+            class="alert alert-danger"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            role="alert"
+            >*BasePriceDistance Is Required and must be positive</span
+          >
+        </div>
+        <div class="input-group mb-3">
+          <label for="BasePrice">Base Price</label>
+          <input
+            type="number"
+            min="0"
+            placeholder="Base Price"
+            id="BasePrice"
+            formControlName="BasePrice"
+            onKeyPress="if(this.value.length==3) return false;"
+          />
+          <span
+            *ngIf="issubmitted && !PricingForm.get('BasePrice')?.valid"
+            class="alert alert-danger"
+            role="alert"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            >*BasePrice Is Required and must be positive
+          </span>
+        </div>
+        <div class="input-group mb-3">
+          <label for="DistancePrice">Price Per Unit Distance</label>
+          <input
+            type="number"
+            min="0"
+            placeholder="Price Per Unit Distance"
+            id="DistancePrice"
+            formControlName="DistancePrice"
+            onKeyPress="if(this.value.length==3) return false;"
+          />
+          <span
+            *ngIf="issubmitted && !PricingForm.get('DistancePrice')?.valid"
+            class="alert alert-danger"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            role="alert"
+            >*DistancePrice Is Required and must be positive</span
+          >
+        </div>
+        <div class="input-group mb-3">
+          <label for="TimePrice">Price Per Unit Time (min)</label>
+          <input
+            type="number"
+            min="0"
+            placeholder="Price Per Unit Time (min)"
+            id="TimePrice"
+            formControlName="TimePrice"
+            onKeyPress="if(this.value.length==3) return false;"
+          />
+          <div
+            *ngIf="issubmitted && !PricingForm.get('TimePrice')?.valid"
+            class="alert alert-danger"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            role="alert"
+          >
+            *TimePrice Is Required and must be positive
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <label for="MaxSpace">Max Space</label>
+          <input
+            type="number"
+            min="0"
+            placeholder="Max Space"
+            id="MaxSpace"
+            formControlName="MaxSpace"
+            onKeyPress="if(this.value.length==3) return false;"
+          />
+          <span
+            *ngIf="PricingForm.get('MaxSpace')?.errors?.['invalidMaxSpace']  && PricingForm.get('MaxSpace')?.touched"
+            class="alert alert-danger"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            role="alert"
+            >MaxSpace must be a positive integer .</span
+          >
+          <span
+            *ngIf="PricingForm.get('MaxSpace')?.errors?.['required'] && issubmitted"
+            class="alert alert-danger"
+            style="
+              width: 190px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+            role="alert"
+            >*MaxSpace Is Required.</span
+          >
+        </div>
+        <div
+          class="alert alert-danger"
+          *ngIf="error && displayerror"
+          role="alert"
+        >
+          {{ error }}
+        </div>
+        <div
+          class="btn-Pricingform-container d-flex justify-content-center mt-5"
+          style="gap: 30px"
+        >
+          <button
+            class="btn btn-primary"
+            *ngIf="!isEditMode"
+            style="min-width: 100px; padding: 10px 0px; cursor: pointer"
+            (click)="initSubmit()"
+          >
+            Add
+          </button>
+          <button
+            class="btn btn-success"
+            style="min-width: 100px; padding: 10px 0px; cursor: pointer"
+            (click)="initSubmit()"
+            *ngIf="isEditMode"
+          >
+            Save
+          </button>
+          <button
+            class="btn btn-danger bg-danger"
+            style="min-width: 100px; padding: 10px 0px; cursor: pointer"
+            type="button"
+            (click)="initReset()"
+          >
+            Cencel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<select
+  [(ngModel)]="limit"
+  style="width: 100px; float: right; margin: 20px 50px; border-radius: 10px"
+  (change)="page = 1; getData()"
+>
+  <option value="2">2</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+</select>
+<div class="ct-table-container">
+  <table class="table-city">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>City</th>
+        <th>Type</th>
+        <th>Driver Profit</th>
+        <th>Min Fare Value</th>
+        <th>Distance For Base Price</th>
+        <th>Base Price</th>
+        <th>Price Per Unit Distance</th>
+        <th>Price Per Unit Time (min)</th>
+        <th>Max Space</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let price of PricingList
+            | paginate
+              : {
+                  itemsPerPage: +limit,
+                  currentPage: +page,
+                  totalItems: totalPriceList
+                }
+        "
+      >
+        <td>{{ price.countryInfo[0].countryname }}</td>
+        <td>{{ price.cityInfo[0].city }}</td>
+        <td>{{ price.VehicleInfo[0].types }}</td>
+        <td>{{ price.DriverProfit }}</td>
+        <td>{{ price.MinFarePrice }}</td>
+        <td>{{ price.BasePriceDistance }}</td>
+        <td>{{ price.BasePrice }}</td>
+        <td>{{ price.DistancePrice }}</td>
+        <td>{{ price.TimePrice }}</td>
+        <td>{{ price.MaxSpace }}</td>
+        <td>
+          <button
+            class="btn btn-success"
+            style="width: 70px; padding: 5px; margin-bottom: 5px"
+            (click)="onEdit(price)"
+          >
+            Edit
+          </button>
+          <!-- <button
+            class="btn btn-danger"
+            style="width: 70px; padding: 5px"
+            (click)="onDelete(price._id)"
+          >
+            Delete
+          </button> -->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div style="float: right; margin: 30px 50px 40px auto">
+  <pagination-controls
+    class="paginationlink"
+    (pageChange)="getData($event)"
+  ></pagination-controls>
+</div>

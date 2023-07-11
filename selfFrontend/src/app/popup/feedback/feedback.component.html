@@ -1,0 +1,48 @@
+<img
+  src="http://localhost:3000/uploads/cards/close.svg"
+  width="20px"
+  style="margin: 10px 20px 10px auto; cursor: pointer"
+  alt="X"
+  srcset=""
+  mat-dialog-close
+/>
+<div class="feedback-container">
+  <form id="feedbackForm" class="inner-container" [formGroup]="FeedbackForm">
+    <div>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" formControlName="email" />
+      <div
+        class="error"
+        *ngIf="
+          !FeedbackForm.get('email')?.valid &&
+          FeedbackForm.get('email')?.touched
+        "
+      >
+        Please Enter Email
+      </div>
+    </div>
+    <div>
+      <label for="FeedBack">FeedBack Description</label>
+      <input
+        type="text"
+        name="FeedBack"
+        id="FeedBack"
+        formControlName="FeedBack"
+      />
+      <div
+        class="error"
+        *ngIf="this.FeedbackForm.get('FeedBack')?.errors?.['required'] && (FeedbackForm.get('FeedBack')?.touched || IsSubmitted)"
+      >
+        Please FeedBack
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-outline-primary"
+      (click)="onSubmit(data)"
+      mat-dialog-close
+    >
+      Submit
+    </button>
+  </form>
+</div>

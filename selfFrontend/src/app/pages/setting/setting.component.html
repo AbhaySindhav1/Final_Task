@@ -1,0 +1,109 @@
+<div class="main-body container">
+  <h1>Settings</h1>
+  <form
+    class="form"
+    [formGroup]="SettingForm"
+    (ngSubmit)="onSave(Settinglist._id)"
+  >
+    <div >
+      <div style="margin: 0px auto">
+        <label for="RideStops" class="form-label"
+          >Maximum Number Of Stops</label
+        >
+        <select name="RideStops" id="RideStops" formControlName="RideStops">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div style="margin: 0px auto">
+        <label for="ReqCronTime" class="form-label">Request Time</label>
+        <select
+          name="ReqCronTime"
+          id="ReqCronTime"
+          formControlName="ReqCronTime"
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="45">45</option>
+          <option value="60">60</option>
+          <option value="90">90</option>
+          <option value="120">120</option>
+        </select>
+      </div>
+      <div style="margin: 5px auto">
+        <label for="smsID" class="form-label">SMS ID</label>
+        <input type="text" id="smsID" formControlName="smsID" name="smsID" />
+      </div>
+      <div style="margin: 5px auto">
+        <label for="smsToken" class="form-label">SMS Token</label>
+        <input
+          type="text"
+          id="smsToken"
+          formControlName="smsToken"
+          name="smsToken"
+        />
+      </div>
+    </div>
+    <div>
+      <div style="margin: 5px auto">
+        <label for="StripePublicKey" class="form-label"
+          >Stripe Public Key</label
+        >
+        <input
+          type="text"
+          id="StripePublicKey"
+          formControlName="StripePublicKey"
+          name="StripePublicKey"
+        />
+      </div>
+      <div style="margin: 5px auto">
+        <label for="StripePrivateKey" class="form-label"
+          >Stripe Private Key</label
+        >
+        <input
+          type="text"
+          id="StripePrivateKey"
+          formControlName="StripePrivateKey"
+          name="StripePrivateKey"
+        />
+      </div>
+      <div style="margin: 5px auto">
+        <label for="EmailID" class="form-label">Email ID</label>
+        <input
+          type="text"
+          id="EmailID"
+          formControlName="EmailID"
+          name="EmailID"
+        />
+      </div>
+      <div style="margin: 5px auto">
+        <label for="EmailSecret" class="form-label">Email Secret</label>
+        <input
+          type="text"
+          id="EmailSecret"
+          formControlName="EmailSecret"
+          name="EmailSecret"
+        />
+      </div>
+      <div style="margin: 5px auto">
+        <label for="EmailToken" class="form-label">Email Token</label>
+        <input
+          type="text"
+          id="EmailToken"
+          formControlName="EmailToken"
+          name="EmailToken"
+        />
+      </div>
+    </div>
+    <div class="btn-container">
+      <button type="submit" class="btn bg-primary">Save</button>
+      <button type="button" class="btn bg-danger" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

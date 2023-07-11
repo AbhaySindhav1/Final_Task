@@ -1,0 +1,97 @@
+<div class="login-container">
+  <div class="signIn card">
+    <div style="width: 100%; text-align: center">
+      <mat-icon style="font-size: 50px; height: 50px; width: 50px">
+        person_pin</mat-icon
+      >
+    </div>
+    <form id="login-form" [formGroup]="LoginForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <label for="LoginEmail" class="form-label">Email</label>
+        <input
+          type="email"
+          id="LoginEmail"
+          class="form-control"
+          name="LoginEmail"
+          formControlName="email"
+          placeholder="Enter Your Email"
+          required
+        />
+      </div>
+      <span
+        *ngIf="!LoginForm.get('email').valid && LoginForm.get('email')?.touched"
+        class="help-block"
+        style="color: red"
+        >Please enter a valid email!</span
+      >
+      <div class="row">
+        <label for="LoginPassWord" class="form-label">Password</label>
+        <input
+          type="password"
+          name="LoginPassWord"
+          class="form-control"
+          formControlName="password"
+          id="LoginPassWord"
+          placeholder="Enter Your Password"
+          required
+        />
+      </div>
+      <div *ngIf="error" style="color: red">{{ error }}</div>
+      <div
+        *ngIf="
+          LoginForm.get('password').invalid && LoginForm.get('password').touched
+        "
+      >
+        <div
+          *ngIf="
+            LoginForm.get('password').errors.required &&
+            LoginForm.get('password').touched
+          "
+          style="color: red"
+        >
+          Password is required.
+        </div>
+        <div
+          *ngIf="
+            LoginForm.get('password').errors.minlength &&
+            LoginForm.get('password').touched
+          "
+          style="color: red"
+        >
+          Password must be at least 8 characters long.
+        </div>
+        <div
+          *ngIf="
+            LoginForm.get('password').errors.maxlength &&
+            LoginForm.get('password').touched
+          "
+          style="color: red"
+        >
+          Password cannot be longer than 20 characters.
+        </div>
+        <div
+          *ngIf="
+            LoginForm.get('password').errors.pattern &&
+            LoginForm.get('password').touched
+          "
+          style="color: red"
+        >
+          Password must contain at least one letter and one number and One
+          Special Character.
+        </div>
+      </div>
+      <div id="btn-container">
+        <button
+          type="submit"
+          class="btn bg-primary"
+          id="logInBtn"
+          [disabled]="!LoginForm.valid"
+        >
+          Log In
+        </button>
+        <!-- <br>
+        <a [routerLink]="['/signup']" style="text-decoration: none ;" > Click to Register </a> -->
+      </div>
+    </form>
+  </div>
+</div>

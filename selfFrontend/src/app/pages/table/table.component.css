@@ -1,0 +1,18 @@
+
+label{
+    margin: 10px ;
+    font-size: larger;
+    font-weight: 500;
+} 
+.display{
+    display: none;
+}
+.displayblock{
+    display: block;
+}
+input{
+    border: 1px solid black;
+}
+.card-container{
+   width: 385px;
+}

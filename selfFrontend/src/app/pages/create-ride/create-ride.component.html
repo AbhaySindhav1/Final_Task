@@ -1,0 +1,410 @@
+<div
+  class=""
+  style="margin: 0; padding: 0; box-sizing: border-box; width: 100%"
+>
+  <div id="upper-container" class="row">
+    <form
+      id="form-container"
+      [formGroup]="RideForm"
+      *ngIf="!RideDetailsFormShow"
+      class="col-4"
+      (ngSubmit)="OnRideFormSubmit()"
+    >
+      <div class="controller">
+        <label for="UserPhone">Phone No.</label>
+        <div>
+          <!-- <input
+            type="number"
+            name="CountryCode"
+            id="CountryCode"
+            class="form-control"
+            style="width: 23%; display: inline-block"
+            formControlName="CountryCode"
+            onKeyPress="if(this.value.length==2) return false;"
+          /> -->
+          <!-- <option
+            name="CountryCode"
+            id="CountryCode"
+            class="form-control"
+            style="width: 23%; display: inline-block"
+            formControlName="CountryCode"
+          >
+            <select name="" id="" [value]="">Heelo</select>
+          </option> -->
+          <select
+            name="CountryCode"
+            id="CountryCode"
+            class="form-control"
+            style="width: 23%; display: inline-block"
+            formControlName="CountryCode"
+          >
+            <option value="" hidden selected>Country Code</option>
+            <option
+              value="{{ CountryCodes }}"
+              *ngFor="let CountryCodes of CountryCodes"
+            >
+              {{ CountryCodes }}
+            </option>
+          </select>
+          <input
+            type="number"
+            name="UserPhone"
+            id="UserPhone"
+            (input)="onInput($event.target)"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+            class="form-control"
+            style="width: 75%; display: inline-block; margin-left: 2%"
+            formControlName="UserPhone"
+            onKeyPress="if(this.value.length === 10 ) return false;"
+          />
+        </div>
+
+        <div
+          *ngIf="
+            f.UserPhone.touched &&
+            !f.CountryCode.touched &&
+            !f.CountryCode.value &&
+            (f.CountryCode.invalid || isSubmitted)
+          "
+          style="color: #ff372e; display: inline-block"
+        >
+          <span *ngIf="f.CountryCode.errors.required"
+            >CountryCode is required.</span
+          >
+        </div>
+
+        <div
+          *ngIf="(f.UserPhone.touched || isSubmitted) && f.UserPhone.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.UserPhone.errors.required"
+            >Mobile Number is required.</span
+          >
+          <span *ngIf="f.UserPhone.errors.pattern"
+            >Please, Enter 10 digit Mobile Number.</span
+          >
+        </div>
+      </div>
+      <div class="controller">
+        <label for="UserName">Name</label>
+        <input
+          type="text"
+          name="UserName"
+          id="UserName"
+          class="form-control"
+          readonly
+          formControlName="UserName"
+        />
+        <div
+          *ngIf="(f.UserName.touched || isSubmitted) && f.UserName.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.UserName.errors.required">UserName is required.</span>
+        </div>
+      </div>
+
+      <div class="controller">
+        <label for="UserEmail">Email</label>
+        <input
+          type="email"
+          name="UserEmail"
+          readonly
+          id="UserEmail"
+          class="form-control"
+          formControlName="UserEmail"
+        />
+        <div
+          *ngIf="(f.UserEmail.touched || isSubmitted) && f.UserEmail.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.UserEmail.errors.required">Email is required.</span>
+          <span *ngIf="f.UserEmail.errors.email"
+            >Please, Enter Valid Email Must includes @, .</span
+          >
+        </div>
+      </div>
+
+      <div id="btn-container">
+        <button type="submit" class="btn bg-primary" [disabled]="!user">
+          Next
+        </button>
+        <!-- <button type="button" class="btn bg-primary" 
+        >
+        (click)="openDialog()"  
+          pop
+        </button> -->
+        <button type="button" class="btn bg-danger" (click)="Cencel()">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <!-- /////                                        /// form Ride tripDetails   ///                                                     ///// -->
+
+    <form
+      id="form-container"
+      [formGroup]="RideDetailsForm"
+      (ngSubmit)="OnRideDetailsFormSubmit()"
+      *ngIf="RideDetailsFormShow"
+      class="col-3"
+    >
+      <div class="controller">
+        <label for="PickupPoint">Pickup Point</label>
+        <input
+          type="text"
+          name="PickupPoint"
+          id="PickupPoint"
+          class="form-control"
+          formControlName="PickupPoint"
+        />
+        <!-- (blur)="onInputBlur($event)" -->
+        <div
+          *ngIf="
+            (d.PickupPoint.touched || isSubmitted) && d.PickupPoint.invalid
+          "
+          style="color: #ff372e"
+        >
+          <span *ngIf="d.PickupPoint.errors.required"
+            >PickupPoint is required.</span
+          >
+        </div>
+      </div>
+
+      <div
+        *ngFor="let stop of stops; let i = index"
+        class="controller"
+        style="position: relative"
+      >
+        <label for="Drop{{ i + 1 }}">Drop{{ i + 1 }}</label>
+        <input
+          type="text"
+          name="Drop{{ i + 1 }}"
+          id="Drop{{ i + 1 }}"
+          class="form-control"
+          formControlName="Drop{{ i + 1 }}"
+        />
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          style="
+            background-color: aliceblue;
+            position: absolute;
+            top: 50px;
+            right: 4%;
+            height: 16px;
+            display: inline-block;
+          "
+          (click)="removeDrop('Drop' + (i + 1))"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-x-circle-fill"
+            viewBox="0 0 16 16"
+            style="color: black"
+          >
+            <path
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+            />
+          </svg>
+
+          <br />
+        </button>
+        <div
+          *ngIf="[
+            ((d['Drop' + (i + 1)] && d['Drop' + (i + 1)].touched) ||
+              isSubmitted) &&
+              d['Drop' + (i + 1)] &&
+              d['Drop' + (i + 1)].invalid
+          ]"
+          style="color: #ff372e"
+        >
+          <span
+            *ngIf="
+              d['Drop' + (i + 1)] &&
+              d['Drop' + (i + 1)].errors?.required &&
+              ((d['Drop' + (i + 1)] && d['Drop' + (i + 1)].touched) ||
+                isSubmitted)
+            "
+            >Drop{{ i + 1 }} is required.</span
+          >
+        </div>
+      </div>
+
+      <div class="controller">
+        <label for="DropPoint">Drop Point</label>
+        <input
+          type="text"
+          name="DropPoint"
+          id="DropPoint"
+          class="form-control"
+          formControlName="DropPoint"
+        />
+        <div
+          *ngIf="(d.DropPoint.touched || isSubmitted) && d.DropPoint.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="d.DropPoint.errors.required"
+            >DropPoint is required.</span
+          >
+        </div>
+      </div>
+
+      <div class="controller">
+        <label for="VehicleSelector">Vehicle Opitons</label>
+        <select
+          class="form-select"
+          id="VehicleSelector"
+          formControlName="VehicleSelector"
+          aria-label="Default select example"
+          (change)="CheckPricing()"
+        >
+          <option value="null" selected hidden>Open this select menu</option>
+          <option *ngIf="Vehicles.length == 0" disabled>
+            No Vehicles Available
+          </option>
+          <option value="{{ Vehicle.id }}" *ngFor="let Vehicle of Vehicles">
+            {{ Vehicle.types }}
+          </option>
+        </select>
+      </div>
+
+      <div class="controller" style="margin: 10px 0px">
+        <label for="DropPoint">Ride Time :</label>
+        <div>
+          <label style="margin: 5px 10px">
+            <input
+              type="radio"
+              [value]="true"
+              [checked]="RideDetailsForm.get('bookingType').value === true"
+              (change)="handleBookingTypeChange(true)"
+            />
+            Book Now
+          </label>
+
+          <label style="margin: 5px 10px">
+            <input
+              type="radio"
+              [value]="false"
+              [checked]="RideDetailsForm.get('bookingType').value === false"
+              (change)="handleBookingTypeChange(false)"
+            />
+            Schedule Time
+          </label>
+          
+        </div>
+        <div>
+          <input
+            type="datetime-local"
+            name="Time"
+            id="Time"
+            class="form-control"
+            formControlName="Time"
+            [min]="getCurrentDateTime()"
+            *ngIf="!RideDetailsForm.get('bookingType').value"
+          />
+        </div>
+        <span *ngIf="isScheduleTimeSelected() && isTimeFieldEmpty() && (f?.Time?.touched || isSubmitted)" class="error-msg">Please select a time.</span>
+      </div>
+
+      <div class="controller" style="margin: 10px 0px">
+        <label for="DropPoint">Payment Type :</label>
+        <div>
+          <label style="margin: 5px 10px">
+            <input
+              type="radio"
+              [value]="'Cash'"
+              [checked]="RideDetailsForm.get('PaymentType').value === 'Cash'"
+              (change)="handlePaymentTypeChange('Cash')"
+            />
+            Cash
+          </label>
+
+          <label style="margin: 5px 10px">
+            <input
+              type="radio"
+              [value]="'Card'"
+              [checked]="RideDetailsForm.get('PaymentType').value === 'Card'"
+              (change)="handlePaymentTypeChange('Card')"
+            />
+            Card
+          </label>
+        </div>
+      </div>
+      <div *ngIf="RideDetailsForm.get('PaymentType').value === 'Card'">
+        <ul class="card">
+          <li *ngIf="Cards?.length == 0">No Cards</li>
+          <li *ngFor="let Card of Cards">
+            <input
+              type="radio"
+              style="margin: 0; font-size: 20px"
+              [value]="Card.id"
+              formControlName="PaymentId"
+              [checked]="RideDetailsForm.get('PaymentId').value === 'Card'"
+              (change)="ChangePayment(Card.id)"
+            />
+            XXXX XXXX XXXX
+            {{ Card.card.last4 }}
+          </li>
+        </ul>
+        <!-- <button class="btn Button" (click)="openDialog(user)">Add Card</button> -->
+      </div>
+
+      <div
+        class="trip-details"
+        *ngIf="tripDetails.Distance"
+        style="text-align: left"
+      >
+        <p id="Distance">Distance : {{ tripDetails.Distance }}</p>
+        <p id="time">Time : {{ tripDetails.Time }}</p>
+        <p id="time">Services Fees : {{ TripCharge }}</p>
+      </div>
+
+      <div id="btn-container">
+        <button
+          type="submit"
+          class="btn bg-success"
+          [disabled]="
+            !RideDetailsForm.Valid &&
+            (!TripCharge ||
+              (RideDetailsForm.get('PaymentType').value === 'Card' &&
+                Cards?.length === 0))
+          "
+        >
+          Book Ride
+        </button>
+        <button type="button" class="btn bg-danger" (click)="OnReset()">
+          Cancel
+        </button>
+        <button
+          *ngIf="stops.length < maxStops"
+          type="button"
+          id="AddStop"
+          class="btn bg-primary"
+          (click)="onAddStop()"
+        >
+          Add Stop
+        </button>
+      </div>
+    </form>
+
+    <div id="map-container" class="col-6">
+      <div id="map"></div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <span
+      class="alert alert-danger"
+      role="alert"
+      style="margin: 0px auto"
+      *ngIf="error"
+      style="color: tomato"
+      >{{ errMassage }}</span
+    >
+  </div>
+
+  <div id="lower-container"></div>
+</div>

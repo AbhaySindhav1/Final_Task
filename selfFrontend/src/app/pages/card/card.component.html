@@ -1,0 +1,68 @@
+<div class="Payment" style="max-height: 50vh">
+  <div class="card-body">
+    <img [src]="getImageSource('close')" width="25px" style="margin: 10px 20px 10px auto; cursor: pointer; " alt="X" srcset="" mat-dialog-close>
+    <ul>
+      <li class="card-detail" *ngIf="cards?.length == 0">No Card Yet</li>
+      <li
+        class="card-detail"
+        *ngFor="let card of cards"
+        [class.selected]="card === selectedCard"
+        (click)="handleCardSelection(card.id,card)"
+      >
+        <img
+        [src]="getImageSource(card.card.brand)"
+          alt="Card"
+          style="height: 50px; width: 70px"
+        />
+        <h4 style="margin: 0; font-size: 20px"> XXXX XXXX XXXX {{ card.card.last4 }}</h4>
+        <button id="DeleteCard" style="margin-left: 20px;"><img [src]="getImageSource('delete')" alt="Delete" srcset="" (click)="DeleteCards(card.id)"></button>
+        <span class="badge bg-success" style="position: absolute; top: 5px; right: 5px;" *ngIf="data?.defaultPayment == card.id">Default</span>
+      </li>
+    </ul> 
+  </div>
+  <div style="display: flex; justify-content:center ; align-items: center; margin: 20px 0px; gap: 40px;">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    id="AddCard"
+    (click)="addCardButton()"
+    *ngIf="!FormDisplay"
+  >
+   ADD CARD
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    id="SetCard"
+    (click)="addDefaultCard(selectedCard)"
+    [disabled]="!selectedCard || data?.defaultPayment == selectedCard?.id"
+  >
+   SET CARD
+  </button>
+</div>
+
+  <div style="padding: 30px" *ngIf="FormDisplay">
+    <form id="payment-form">
+      <div
+        id="payment-element"
+        style="border: 2px solid black; padding: 20px; border-radius: 5px"
+      >
+        <!-- Elements will create form elements here -->
+      </div>
+      <button
+        mat-raised-button
+        color="primary"
+        class="mt-4"
+        id="submit"
+        (click)="AddCards()"
+      >
+        Submit
+      </button>
+      <div id="error-message" class="mt-3" style="color: red;">
+        <!-- Display error message to your customers here -->
+      </div>
+    </form>
+  </div>
+</div>

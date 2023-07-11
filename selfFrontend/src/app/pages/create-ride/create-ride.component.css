@@ -1,0 +1,68 @@
+#upper-container {
+  width: 100%;
+  margin: 0;
+  padding: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+#form-container {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px dotted black;
+  border-radius: 5%;
+}
+.error-msg {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+label {
+  font-size: 17px;
+  font-weight: 500;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  margin: 15px 5px 4px;
+}
+input select option {
+  width: 100%;
+}
+
+.controller  {
+  width: 100%;
+ margin: 0px auto;
+}
+h3{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 300;
+}
+p{
+  margin: 0;
+  margin-top: 5px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+button {
+  color: aliceblue;
+  /* min-width: 100px; */
+}
+#btn-container {
+  margin: 40px 0px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
+#map-container {
+  height: 450px;
+}
+#map {
+  height: 100%;
+}

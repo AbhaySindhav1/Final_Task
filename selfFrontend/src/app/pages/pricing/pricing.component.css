@@ -1,0 +1,78 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.form-container{
+    max-width: 99%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+select,input{
+    margin: 0px 40px ;
+    padding: 10px 20px;
+    font-size: 18px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    outline: none;
+}
+select,input{
+    width: 400px;
+    background-color:#d3d8fc;
+}
+label{
+    margin: auto 0px;
+    font-size: 18px;
+    width: 200px;
+}
+.div{
+    margin: 30px auto; 
+}
+
+.ct-table-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+  }
+  table{
+    width: 95%;
+    /* background-color:lightcyan; */
+    font-weight: 600;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /* border-radius: 5px; */
+  }
+  th{
+    font-size: 18px;
+    font-weight: bolder;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  td,th{
+    border: 1px solid white;
+    text-align: center;
+    padding: 10px;
+  
+  }
+  .container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .paginationlink /deep/ .ngx-pagination .current {
+    background: rgb(82, 133, 244);
+    border-radius: 50%;
+  
+  }
+  
+  .paginationlink /deep/ .ngx-pagination {
+    padding: 7px;
+    margin: 7px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px rgb(82, 133, 244)    ;
+  }
+  
+  .paginationlink /deep/ .ngx-pagination .ng-star-inserted {
+    text-decoration: none;
+  }

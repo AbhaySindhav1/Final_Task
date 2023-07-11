@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Asap&family=Roboto:ital,wght@0,500;0,900;1,500&display=swap");
+h1 {
+  font-family: "Asap", sans-serif;
+  font-weight: 500;
+  font-size: 70px;
+  padding-top: 20px;
+  margin-left: 50px;
+  margin-bottom: 40px;
+}
+
+.drop {
+  display: flex;
+  flex-direction: column;
+}
+input {
+  text-align: center;
+}
+.drop1,
+.drop2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 20px;
+  padding: 10px;
+}
+select {
+  width: 500px;
+  height: 40px;
+}
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  padding: 10px 0px;
+}
+#tbody {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+#tbody h2 {
+  font-weight: bolder;
+  font-size: 30px;
+  margin: 25px 0px;
+}
+.countrydata {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.countrydata h3 {
+  margin: 1px;
+}
+.heading {
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.heading button {
+  margin-left: auto;
+  margin-right: 40px;
+}
+.abhay{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form1{
+    width: 500px;
+    margin: 20px auto;
+    border-bottom-left-radius: 10px;
+}
+.SearchBox{
+    margin: 20px;
+}

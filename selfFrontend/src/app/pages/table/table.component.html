@@ -1,0 +1,213 @@
+<div style="margin: 40px auto 80px auto">
+  <div style="width: 90%; text-align: center">
+    <mat-icon
+      style="font-size: 50px; height: 50px; width: 50px; margin: 10px auto"
+    >
+      directions_car</mat-icon
+    >
+  </div>
+  <form
+    id="vehicleform"
+    [formGroup]="vehicleForm"
+    (ngSubmit)="OnSubmit(Form)"
+    #Form="ngForm"
+  >
+    <div class="row d-flex justify-content-center">
+      <div class="col-3">
+        <label for="Type" class="form-label">Type</label>
+        <input
+          type="text"
+          name="types"
+          class="form-control"
+          formControlName="types"
+          id="types"
+          placeholder="Enter Your types"
+          required
+        />
+
+        <span
+          *ngIf="vehicleForm.get('types').invalid && submitted"
+          style="margin: 10px 0px; color: red; padding: 10px 0px"
+          >Please Select Type</span
+        >
+      </div>
+
+      <!-- <div class="col-2">
+        <label for="Name" class="form-label">Name</label>
+        <input
+          type="text"
+          name="Name"
+          class="form-control"
+          formControlName="name"
+          id="Name"
+          placeholder="Enter Your Car"
+          required
+        />
+        <span
+          *ngIf="
+            vehicleForm.get('name').invalid && vehicleForm.get('name').touched
+          "
+          >Please Enter Name</span
+        >
+      </div> -->
+      <br />
+
+      <div class="col-3">
+        <label for="profile">Upload An Image</label>
+        <input
+          type="file"
+          id="profile"
+          name="profile"
+          formControlName="profile"
+          class="form-control"
+          #file
+        />
+        <span
+          *ngIf="
+            vehicleForm.get('profile').invalid &&
+            (vehicleForm.get('profile').touched || submitted)
+          "
+          style="color: red; padding: 10px 0px"
+          >Please Upload Picture</span
+        >
+      </div>
+
+      <div
+        id="btn-container"
+        class="col-1 d-flex"
+        style="align-items: center; justify-content: start"
+      >
+        <button
+          type="submit"
+          *ngIf="!updateButton"
+          class="btn btn-primary bg-primary"
+          id="logInBtn"
+          style="
+            padding: 7px 20px;
+            font-size: 15px;
+            font-weight: 400;
+            margin-left: 30px;
+            margin-top: 35px;
+          "
+        >
+          +Add
+        </button>
+        <button
+          type="submit"
+          *ngIf="updateButton"
+          class="btn bg-success"
+          id="logInBtn"
+          style="
+            padding: 7px 20px;
+            font-size: 15px;
+            font-weight: 400;
+            margin-left: 30px;
+            margin-top: 35px;
+          "
+        >
+          Update
+        </button>
+        <button
+          type="button"
+          class="btn bg-danger"
+          id="Cancel"
+          (click)="onCencel()"
+          style="
+            padding: 7px 20px;
+            font-size: 15px;
+            font-weight: 400;
+            margin-left: 30px;
+            margin-top: 35px;
+          "
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+  <span *ngIf="error" style="color: red; padding: 10px 0px">{{ error }}</span>
+</div>
+<table>
+  <tbody style="display: flex ml-2">
+    <div class="container-fluid">
+      <div class="row d-flex" style="gap: 40px; background-color: white">
+        <div
+          class="card-container"
+          style="
+            justify-content: center;
+            text-align: center;
+            background-color: #e3e7ea;
+            padding: 45px;
+          "
+          *ngFor="let card of cards"
+        >
+          <img
+            src="http://localhost:3000/uploads/Vehicles/{{ card.profile }}"
+            alt=""
+            style="
+              width: 332px;
+              height: 220px;
+              border-radius: 15px;
+              margin: auto;
+              background-size: cover;
+            "
+          />
+          <br />
+
+          <h1
+            style="
+              font-weight: 800;
+              font-size: 40px;
+              font-family: cursive;
+              margin: 20px auto 40px auto;
+            "
+          >
+            {{ card.types }}
+          </h1>
+          <!-- <h3>{{ card.name }}</h3> -->
+
+          <div class="d-flex" style="justify-content: space-around">
+            <button
+              class="btn btn-success bg-success"
+              type="button"
+              style="padding: 5px 20px; cursor: pointer"
+              (click)="onEdit(card._id, card, Form)"
+            >
+              Edit
+            </button>
+            <!-- <button
+              class="btn btn-danger bg-danger"
+              type="button"
+              style="padding: 5px 20px; cursor: pointer"
+              (click)="onDelete(card._id)"
+              >
+              Delete
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </tbody>
+</table>
+
+<!-- <div class="row" style="display: flex; flex-direction: row; gap: 45px;">
+  <div class="vehicle-card card " style="width: 15vw; display: flex; flex-direction: column; background-color: #4f7b9271"  *ngFor="let card of cards">
+    <div class="profile" style="height: 250px; width: 100%; background-position: center; background-size: cover;">
+      <img src="http://localhost:3000/uploads/{{card.profile}}" alt="" style="width: 100%; height: 100%; border-radius: 50%">
+    </div>
+    <div class="label" style="text-align: center">
+      <h3>{{card.types}}</h3>
+    </div>
+    <div class="label" style="text-align: center">
+      <h1>{{card.name}}</h1>
+    </div>
+    <div class="buttons" style="display: flex; justify-content: space-around; align-items: center;">
+      <button class="btn btn-success" type="button" style="padding: 5px 20px; cursor: pointer" (click)="onEdit(card._id,card,Form)">
+        Edit
+      </button>
+      <button class="btn btn-danger"  type="button" style="padding: 5px 20px; cursor: pointer" (click)="onDelete(card._id)">
+        Delete
+      </button>
+    </div>
+  </div>
+</div> -->

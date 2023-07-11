@@ -1,0 +1,95 @@
+.ct-table-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+.table-city {
+  width: 95%;
+  background-color: white;
+  font-weight: 600;
+  margin: 20px auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.table-city th,
+.table-city tbody div th {
+  font-size: 15px;
+  font-weight: bolder;
+}
+.table-city td,
+.table-city th {
+  text-align: center;
+  padding: 10px;
+  vertical-align: middle;
+}
+.ellipsisRow {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsisRow;
+}
+
+.Btn{
+  padding: 10px 20px;
+  background-color: #6d7ae0;
+  min-width: 100px;
+  border-radius: 10px;
+  font-size: larger;
+}
+#DownloadBtn{
+  float: left;
+  color: #fff;
+  margin: 50px auto 0px 50px;
+}
+
+.paginationlink /deep/ .ngx-pagination .current {
+  background: rgb(82, 133, 244);
+  border-radius: 50%;
+}
+
+.paginationlink /deep/ .ngx-pagination {
+  padding: 7px;
+  margin: 7px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 10px rgb(82, 133, 244);
+}
+
+.paginationlink /deep/ .ngx-pagination .ng-star-inserted {
+  text-decoration: none;
+}
+
+#Filter-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 40px auto;
+}
+.d-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.d-column label {
+  margin: 5px 40px;
+}
+
+select,
+input {
+  margin: 0px 30px;
+  padding: 10px 20px;
+  font-size: 18px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  width: 250px;
+  background-color: #6d7ae0;
+  outline: none;
+}
+option {
+  background-color: #fff;
+}
+
+
+
+/* CSS for striped rows */
+.table-city tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

@@ -1,0 +1,207 @@
+<div>
+  <h1 class="heading">
+    Country
+    <button
+      type="button"
+      class="btn"
+      (click)="onSearch()"
+      style="min-width: 100px; background-color: rgb(126, 199, 223)"
+    >
+      {{ isSearchMode ? "Add" : "Search" }}
+    </button>
+  </h1>
+
+  <form
+    class="drop"
+    [formGroup]="CountryForm"
+    (ngSubmit)="onSubmit()"
+    *ngIf="!isSearchMode"
+  >
+    <div class="drop1">
+      <div class="form-outline">
+        <label for="countrySelector" class="form-label">
+          Select The Country</label
+        >
+        <select
+          class="form-select countryOption"
+          id="countrySelector"
+          aria-label="Default select example"
+          formControlName="selectedCountry"
+          (ngModelChange)="onCountrySelect()"
+          required
+        >
+          <option name="" id="" value="null" selected>Select Country</option>
+
+          <option value="{{ Country.cca3 }}" *ngFor="let Country of Countries">
+            {{ Country.name.common }}
+          </option>
+        </select>
+        <br />
+        <span
+          *ngIf="!changed && this.CountryForm.get('selectedCountry').touched"
+          style="color: tomato"
+          >{{ error }}</span
+        >
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="timeZone">TimeZone</label>
+        <input
+          type="text"
+          id="timeZone"
+          class="form-control"
+          [(ngModel)]="selectedCountryData.timeZone"
+          formControlName="timezone"
+          placeholder="TimeZone"
+        />
+      </div>
+      <!-- [value]="selectedCountryData.timeZone" -->
+
+      <div class="form-outline">
+        <label class="form-label" for="currency">Currency</label>
+        <input
+          type="text"
+          id="currency"
+          class="form-control"
+          [(ngModel)]="selectedCountryData.currency"
+          formControlName="currency"
+          placeholder="Currency"
+        />
+      </div>
+
+      <!-- [value]="selectedCountryData.currency" -->
+      <div class="form-outline">
+        <label class="form-label" for="countrycode">Country Code</label>
+        <input
+          type="text"
+          id="countrycode"
+          [(ngModel)]="selectedCountryData.countrycode"
+          class="form-control"
+          formControlName="countrycode"
+          placeholder="Country Code"
+        />
+      </div>
+      <!-- [value]="selectedCountryData.countrycode" -->
+
+      <div class="form-outline">
+        <label class="form-label" for="flag">flag</label>
+
+        <input
+          type="text"
+          id="flag"
+          [(ngModel)]="selectedCountryData.flag"
+          class="form-control"
+          formControlName="flag"
+          placeholder="flag"
+        />
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <button class="btn btn-primary">Add Country</button>
+      <button
+        class="btn"
+        type="button"
+        style="background-color: #ff372e"
+        (click)="oncencel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+  <div class="form-outline SearchBox" *ngIf="isSearchMode">
+    <div class="input-group ps-5 abhay">
+      <div id="navbar-search-autocomplete " class="form-outline">
+        <label
+          for="form1"
+          style="font-size: 20px; font-weight: 500; margin: 10px 0px"
+        >
+          Search Country</label
+        >
+        <input
+          type="search"
+          id="searchBtn"
+          class="form-control form1"
+          placeholder="Search Country"
+          style="vertical-align: baseline; margin: 0px"
+        />
+      </div>
+      <button
+        type="button"
+        class="btn bg-primary"
+        style="
+          margin: 10px;
+          margin-top: 50px;
+          padding: 10px;
+          border: 1px solid black;
+        "
+        (click)="onSearchCountry()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-search"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="card" *ngIf="CountryList?.length == 0"> No Countries</div>
+  <div
+    class="table card"
+    style="padding: 10px 15px; width: 100%; background-color: #e3e7ea"
+    *ngIf="CountryList?.length > 0"
+  >
+  <table>
+      <tbody
+        class="tbody"
+        id="tbody"
+        style="min-width: 100%; background-color: #e3e7ea"
+      >
+        <div class="d-flex flex-row flex-wrap justify-content-evenly py-5" style="background-color: #e3e7ea">
+          <div class="card m-2" *ngFor="let country of CountryList">
+            <!-- ng for -->
+
+            <img
+              src="{{ country.flagimage }}"
+              alt="Country Image"
+              style="width: 300px; height: 200px"
+            />
+            <div class="countrydata" style="max-width: 300px">
+              <h2 class="countryName text-wrap">{{ country.countryname }}</h2>
+              <h3 class="countryCode">
+                CountryCode : &nbsp;
+                {{ country.countrycode || "No CountryCode" }}
+              </h3>
+              <h3 class="currency">
+                Currency : &nbsp; {{ country.currency || "No Currency" }}
+              </h3>
+              <h3 class="countryTimeZone">
+                TimeZone : &nbsp; {{ country.timeZone || "No TimeZone" }}
+              </h3>
+            </div>
+            <div
+              class="buttonContainer"
+              style="text-align: center; margin: 15px 0px"
+            >
+              <!-- <button
+                class="btn"
+                type="button"
+                (click)="onDelete(country._id)"
+                style="background-color: #FF372E;"
+              >
+                Delete
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </tbody>
+    </table>
+  </div>
+</div>

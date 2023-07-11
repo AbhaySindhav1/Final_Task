@@ -1,0 +1,92 @@
+<div
+  class="sidebar bg-dark"
+  id="sidebargg"
+  [ngClass]="{ close: isClassToggled }"
+>
+  <div class="logo-details">
+    <i class="bx bxl-c-plus-plus"></i>
+    <span class="logo_name">Eber Panel</span>
+  </div>
+  <ul class="nav-links">
+    <li>
+      <a routerLinkActive="active" routerLink="/users">
+        <i class="bx bx-grid-alt"></i>
+        <span class="link_name white">Users</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name white">Login</a></li>
+      </ul>
+    </li>
+    <li class="">
+      <div class="iocn-link" appDropDown>
+        <a>
+          <i class="bx bx-collection"></i>
+          <span class="link_name white">Rides</span>
+        </a>
+
+        <i class="bx bxs-chevron-down arrow"></i>
+      </div>
+
+      <ul class="sub-menu">
+        <li><a class="link_name">Category</a></li>
+        <li>
+          <a routerLinkActive="active" routerLink="/createRide">Create Ride</a>
+        </li>
+        <li>
+          <a routerLinkActive="active" routerLink="/Confirm">Confirmed Rides</a>
+        </li>
+        <li>
+          <a routerLinkActive="active" routerLink="/History">Ride History</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div class="iocn-link" appDropDown>
+        <a>
+          <i class="bx bx-book-alt"></i>
+          <span class="link_name">Drivers</span>
+        </a>
+
+        <i class="bx bxs-chevron-down arrow"></i>
+      </div>
+      <ul class="sub-menu">
+        <li><a routerLinkActive="active" routerLink="/driver">List</a></li>
+        <li>
+          <a routerLinkActive="active" routerLink="/runningReq"
+            >Running request</a
+          >
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <div class="iocn-link" appDropDown>
+        <a>
+          <i class="bx bx-plug"></i>
+          <span class="link_name">Pricing</span>
+        </a>
+        <i class="bx bxs-chevron-down arrow"></i>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name">Category</a></li>
+        <li><a routerLink="/country" routerLinkActive="active">Country</a></li>
+        <li><a routerLink="/city" routerLinkActive="active">City</a></li>
+        <li>
+          <a routerLink="/table" routerLinkActive="active">Vehicle type</a>
+        </li>
+        <li><a routerLink="/pricing">Vehicle Pricing</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a routerLink="/Settings" routerLinkActive="active"> 
+        <i class="bx bx-cog"></i>
+        <a class="link_name">Settings</a>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name">Settings</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</div>

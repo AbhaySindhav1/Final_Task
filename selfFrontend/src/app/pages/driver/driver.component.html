@@ -1,0 +1,602 @@
+<div>
+  <h1 class="heading">
+    Drivers
+    <button
+      type="button"
+      class="btn button"
+      (click)="onSearch()"
+      style="min-width: 100px; background-color: rgb(126, 149, 223)"
+    >
+      {{ isSearchMode ? "Add" : "Search" }}
+    </button>
+  </h1>
+
+  <form
+    class="drop"
+    [formGroup]="DriverForm"
+    (ngSubmit)="onFormSubmit()"
+    *ngIf="!isSearchMode"
+  >
+    <div class="drop1">
+      <div class="form-outline">
+        <label class="form-label" for="DriverFile">User Profile</label>
+        <input
+          type="file"
+          id="DriverFile"
+          class="form-control"
+          formControlName="DriverFile"
+          (change)="onFileSelected($event)"
+        />
+        <br />
+        <span
+          *ngIf="(f.DriverFile.touched || isSubmitted) && f.DriverFile.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.DriverFile.errors.required"
+            >Profile Picture is required.</span
+          >
+        </span>
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="DriverName">DriverName</label>
+        <input
+          type="text"
+          id="DriverName"
+          class="form-control"
+          formControlName="DriverName"
+          placeholder="John Mike"
+        />
+        <br />
+        <span
+          *ngIf="(f.DriverName.touched || isSubmitted) && f.DriverName.invalid"
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.DriverName.errors.required"
+            >DriverName is required.</span
+          >
+        </span>
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="DriverEmail">Driver Email</label>
+        <input
+          type="text"
+          id="DriverEmail"
+          class="form-control"
+          formControlName="DriverEmail"
+          placeholder="ex.. example@example.com"
+        />
+        <br />
+        <span
+          *ngIf="
+            (f.DriverEmail.touched || isSubmitted) && f.DriverEmail.invalid
+          "
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.DriverEmail.errors.required">Email is required.</span>
+          <span *ngIf="f.DriverEmail.errors.email"
+            >Please, Enter Valid Email Must includes @, .</span
+          >
+        </span>
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="DriverCity">Country </label>
+        <br />
+        <select
+          name="DriverCountry"
+          id="DriverCountry"
+          formControlName="DriverCountry"
+          (change)="onCountrySelect()"
+        >
+          <option value="null" selected hidden>Select Country</option>
+          <option value="{{ Country._id }}" *ngFor="let Country of CountryList">
+            {{ Country.countryname }}
+          </option>
+        </select>
+        <br />
+        <br />
+        <span
+          *ngIf="
+            (f.DriverCountry.touched || isSubmitted) && f.DriverCountry.invalid
+          "
+          style="color: #ff372e"
+        >
+          Please Select Country
+        </span>
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="countrycode">Country Code</label>
+        <input
+          type="number"
+          id="CountryCode"
+          class="form-control"
+          formControlName="CountryCode"
+          onKeyPress="if(this.value.length==2) return false;"
+          placeholder="+91"
+          style="width: 100px; margin-right: -25px"
+          readonly
+        />
+        <br />
+        <span
+          *ngIf="
+            (f.CountryCode.touched || isSubmitted) && f.CountryCode.invalid
+          "
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.CountryCode.errors.required"
+            >CountryCode is required.</span
+          >
+        </span>
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="DriverPhone">DriverPhone</label>
+
+        <input
+          type="number"
+          id="DriverPhone"
+          class="form-control"
+          formControlName="DriverPhone"
+          placeholder="9879856413"
+          onKeyPress="if(this.value.length==10) return false;"
+        />
+        <br />
+        <span
+          *ngIf="
+            (f.DriverPhone.touched || isSubmitted) && f.DriverPhone.invalid
+          "
+          style="color: #ff372e"
+        >
+          <span *ngIf="f.DriverPhone.errors.required"
+            >Mobile Number is required.</span
+          >
+          <span *ngIf="f.DriverPhone.errors.pattern"
+            >Please, Enter 10 digit Mobile Number.</span
+          >
+        </span>
+      </div>
+
+      <div class="form-outline">
+        <label class="form-label" for="DriverCity">City </label>
+        <br />
+        <select name="DriverCity" id="DriverCity" formControlName="DriverCity">
+          <option value="null" selected hidden>Select City</option>
+          <option value="{{ City._id }}" *ngFor="let City of CityList">
+            {{ City.city }}
+          </option>
+        </select>
+        <br />
+        <br />
+        <span
+          *ngIf="(f.DriverCity.touched || isSubmitted) && f.DriverCity.invalid"
+          style="color: #ff372e"
+        >
+          Please Select City
+        </span>
+      </div>
+    </div>
+    <div
+      class="alert alert-danger"
+      *ngIf="error && displayerror"
+      role="alert"
+      style="text-align: center"
+    >
+      {{ error }}
+    </div>
+
+    <div class="btn-container">
+      <button
+        class="btn button Button"
+        type="submit"
+        style="background-color: #6d7ae0"
+        *ngIf="!isEditMode"
+      >
+        Add User
+      </button>
+      <button
+        class="btn bg-success"
+        type="button"
+        style="min-width: 100px; padding: 10px 0px; cursor: pointer"
+        (click)="onFormSubmit()"
+        *ngIf="isEditMode"
+      >
+        Save
+      </button>
+      <button
+        class="btn button"
+        type="button"
+        style="background-color: #ff372e; color: white"
+        (click)="initReset()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+  <div class="form-outline SearchBox" *ngIf="isSearchMode">
+    <div class="input-group ps-5 abhay">
+      <div id="navbar-search-autocomplete " class="form-outline">
+        <label
+          for="form1"
+          style="font-size: 17px; font-weight: 500; margin: 10px 0px"
+        >
+          Search Users</label
+        >
+        <input
+          type="search"
+          id="searchBtn"
+          class="form-control form1"
+          placeholder="Search Country"
+          style="vertical-align: baseline; margin: 0px"
+        />
+      </div>
+      <button
+        type="button"
+        class="btn bg-primary"
+        style="margin-top: 40px; border-radius: 8px"
+        (click)="onSearchDriver()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          fill="currentColor"
+          class="bi bi-search"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <select
+    [(ngModel)]="limit"
+    style="
+      width: 100px;
+      float: right;
+      margin: 50px 50px 0px auto;
+      background-color: #6d7ae075;
+      border-radius: 10px;
+    "
+    (change)="page = 1; getDriverReq()"
+  >
+    <option value="2">2</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+  </select>
+
+  <div class="ct-table-container">
+    <table class="tables">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Driver Profile</th>
+          <th>
+            <div>
+              DriverName
+
+              <svg
+                (click)="onSearchDriver('DriverName')"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-sort-down-alt"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"
+                />
+              </svg>
+            </div>
+          </th>
+          <th>
+            <div>
+              DriverEmail
+
+              <svg
+                (click)="onSearchDriver('DriverEmail')"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-sort-down-alt"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"
+                />
+              </svg>
+            </div>
+          </th>
+          <th>
+            <div>
+              DriverPhone
+
+              <svg
+                (click)="onSearchDriver('DriverPhone')"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-sort-down-alt"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"
+                />
+              </svg>
+            </div>
+          </th>
+          <th>
+            <div>
+              DriverCountry
+
+              <svg
+                (click)="onSearchDriver('DriverCountry')"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-sort-down-alt"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"
+                />
+              </svg>
+            </div>
+          </th>
+          <th>
+            <div>
+              DriverCity
+
+              <!-- <svg
+                  (click)="onSearchDriver('DriverCity')"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-sort-down-alt"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"
+                  />
+                </svg> -->
+            </div>
+          </th>
+          <th>ServiceType</th>
+          <th>Approval</th>
+
+          <th>Status</th>
+          <th style="min-width: 350px">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let driver of DriverData
+              | paginate
+                : {
+                    itemsPerPage: +limit,
+                    currentPage: +page,
+                    totalItems: +totalDriver
+                  };
+            let i = index
+          "
+        >
+          <td>{{ i + 1 }}</td>
+          <td>
+            <div class="d-flex justify-content-center" style="width: 100%">
+              <img
+                class="d-flex img-fluid"
+                [src]="getImageSource(driver)"
+                alt=""
+                style="
+                  width: 80px;
+                  height: 80px;
+                  justify-content: center;
+                  align-items: centerimg-fluid;
+                "
+              />
+            </div>
+          </td>
+          <td title="{{ driver.DriverName }}" class="ellipsisRow">
+            {{ driver.DriverName }}
+          </td>
+          <td title="{{ driver.DriverEmail }}" class="ellipsisRow">
+            {{ driver.DriverEmail }}
+          </td>
+          <td title="{{ driver.DriverPhone }}" class="ellipsisRow">
+            {{ driver.DriverPhone }}
+          </td>
+          <td title="{{ driver.CountryInfo[0]._id }}" class="ellipsisRow">
+            {{ driver.CountryInfo[0].countryname }}
+          </td>
+          <td title="{{ driver.CityInfo[0]._id }}" class="ellipsisRow">
+            {{ driver.CityInfo[0].city }}
+          </td>
+          <td style="min-width: 150px">
+            {{ driver.ServiceTypeInfo[0]?.types || "" }}
+            <span
+              style="margin: 0px 10px; cursor: pointer"
+              (click)="onupdateDriver(driver)"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              ><i style="font-size: 18px" class="fa">&#xf040;</i></span
+            >
+          </td>
+          <td>{{ driver.approval }}</td>
+          <td>
+            <div
+              style="
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              {{ driver.status }}
+              <div class="dropdown" style="display: inline-block">
+                <button
+                  class="btn bg-primary dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      (click)="onDriverStatus(driver._id, 'online')"
+                      >Online</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      (click)="onDriverStatus(driver._id, 'busy')"
+                      >busy</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      (click)="onDriverStatus(driver._id, 'onRequest')"
+                      >onRequest</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </td>
+          <td>
+            <button
+              class="btn btn-success button"
+              (click)="onEditDriver(driver)"
+            >
+              Edit
+            </button>
+            <button
+              class="btn btn-danger button"
+              (click)="onDeleteDriver(driver._id)"
+            >
+              Delete
+            </button>
+
+            <div class="dropdown" style="display: inline-block">
+              <button
+                class="btn bg-secondary dropdown-toggle button"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Status
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    (click)="onStatusUpdate(driver._id, 'Approve')"
+                    >Approve</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    (click)="onStatusUpdate(driver._id, 'Decline')"
+                    >Decline</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="float: right; margin-right: 50px; margin: 0px 50px 40px auto">
+    <pagination-controls
+      class="paginationlink"
+      (pageChange)="getDriverReq($event)"
+    ></pagination-controls>
+  </div>
+</div>
+
+<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                    //   pop up //                                                                              //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="staticBackdropLabel">Assign Vehicle</h3>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          X
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-outline">
+          <label class="form-label" for="DriverCity">ServiceType</label>
+          <br />
+          <select name="ServiceType" id="ServiceType">
+            <option selected hidden>Select ServiceType</option>
+            <option value="null">No Vehicle</option>
+            <option
+              value="{{ Vehicle.VehicleInfo._id }}"
+              *ngFor="let Vehicle of VehicleList"
+            >
+              {{ Vehicle.VehicleInfo.types }}
+            </option>
+          </select>
+          <br />
+          <br />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn bg-danger"
+          style="color: white"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn"
+          style="background-color: #6d7ae0; color: white"
+          (click)="onAssignService()"
+          data-bs-dismiss="modal"
+          [disabled]="VehicleList?.length == 0"
+        >
+          Assign
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
