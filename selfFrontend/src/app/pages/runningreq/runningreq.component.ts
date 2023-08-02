@@ -22,6 +22,7 @@ export class RunningreqComponent implements OnInit {
   limit: any = 10;
   page: any = 1;
   totalRides: any;
+  dialogRef: any;
 
   constructor(
     config: NgbModalConfig,
@@ -63,6 +64,12 @@ export class RunningreqComponent implements OnInit {
 
     this.socketService.socket.on('CancelledRide', (data: any) => {
       this.CancelRide(data.Ride);
+    });
+
+    this.socketService.socket.on('ModelClose', (data: any) => {
+      if (this.dialogRef) {
+        this.dialogRef.close();
+      }
     });
   }
 
@@ -146,8 +153,12 @@ export class RunningreqComponent implements OnInit {
     this.rideService.initProgressRide(id, Status).subscribe({
       next: (data) => {
         let updatedStatus = this.rideService.initGetStatus(Status);
-        
+
         if (Status == 5) {
+          this.dialogRef = this.dialog.open(FeedbackComponent, {
+            width: '600px',
+            data: id,
+          });
           this.RideList = this.RideList.filter((ride: any) => {
             return ride._id !== id;
           });
@@ -161,16 +172,13 @@ export class RunningreqComponent implements OnInit {
   }
 
   openDialog(Ride: any) {
-    const dialogRef = this.dialog.open(RideDetailComponent, {
+    this.dialogRef = this.dialog.open(RideDetailComponent, {
       data: Ride,
     });
   }
 
   openFeedbackForm(ID: any) {
-    const dialogRef = this.dialog.open(FeedbackComponent, {
-      width: '600px',
-      data: ID,
-    });
+    
   }
 
   initChange(data: any) {
@@ -193,10 +201,3 @@ export class RunningreqComponent implements OnInit {
     this.staticBackdrop.nativeElement.style.display = 'none';
   }
 }
-
-// this.socketService.socket.on('RideCompleted', (data: any) => {
-//   console.log("RideCompleted",data);
-//   this.RideList = this.RideList.filter((ride: any) => {
-//     return ride._id !== data.Ride._id;
-//   });
-// });

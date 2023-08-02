@@ -11,7 +11,7 @@ const {
 const Sockets = require("./Socket");
 
 module.exports = function (io) {
-  cron.schedule(`*/10 * * * * *`, async () => {
+  cron.schedule(`*/30 * * * * *`, async () => {
     try {
       let rides = await getUnassignedRequests();
       await AssignRideToDriver(rides);

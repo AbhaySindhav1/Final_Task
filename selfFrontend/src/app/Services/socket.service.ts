@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { Subject } from 'rxjs/internal/Subject';
 import { io } from 'socket.io-client';
-import { RunningreqComponent } from '../pages/runningreq/runningreq.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({

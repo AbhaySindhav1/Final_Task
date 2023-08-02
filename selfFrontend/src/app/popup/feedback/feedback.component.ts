@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from 'src/app/Services/socket.service';
 
 @Component({
   selector: 'app-feedback',
@@ -16,7 +17,8 @@ export class FeedbackComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
@@ -34,11 +36,15 @@ export class FeedbackComponent implements OnInit {
       return;
     }
 
+    console.log("hsadbhsgd");
+    
+
     let feedForm = document.getElementById('feedbackForm') as HTMLFormElement;
     let formData = new FormData(feedForm);
     this.http.post('http://localhost:3000/FeedBack/' + id, formData).subscribe({
       next: (data: any) => {
         this.toaster.success(data.msg);
+        this.socketService.socket.emit('ModelClose', true);
         this.FeedbackForm.reset();
         this.IsSubmitted = false;
       },

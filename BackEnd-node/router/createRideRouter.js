@@ -16,7 +16,6 @@ const {
   createCustomer,
   GetPayment,
 } = require("../Controller/Functions/Stripe");
-const { log } = require("console");
 require("dotenv").config({ path: envPath });
 
 ////                                                             ///  ADD Ride ///                                                                             ////
@@ -102,31 +101,28 @@ router.post("/GetRides", upload.none(), auth, async (req, res) => {
       toDate
     );
   }
-
-  let count = { $group: { _id: null, total: { $sum: 1 } } };
-  let countPipeline = [
-    ...(matchQuery ? [matchQuery] : []),
-    ...lookup,
-    ...(filterMatchQuery ? [{ $match: filterMatchQuery }] : []),
-    count,
-  ];
-
   let pipeline = [
     ...(matchQuery ? [matchQuery] : []),
     ...lookup,
     ...(filterMatchQuery ? [{ $match: filterMatchQuery }] : []),
-    { $skip: skip },
-    { $limit: limit },
+    {
+      $facet: {
+        data: [{ $skip: skip }, { $limit: limit }],
+        count: [{ $group: { _id: null, total: { $sum: 1 } } }],
+      },
+    },
   ];
 
   try {
-    const Rides = await CreateRide.aggregate(pipeline);
-    let totalRide = await CreateRide.aggregate(countPipeline);
-
-    if (!totalRide[0]) {
-      totalRide = 0;
+    const rides = await CreateRide.aggregate(pipeline);
+    let Rides;
+    let totalRide;
+    if (rides[0].data.length > 0 && rides[0].count[0].total) {
+      Rides = rides[0].data;
+      totalRide = rides[0].count[0].total;
     } else {
-      totalRide = totalRide[0].total;
+      Rides = [];
+      totalRide = 0;
     }
     res.status(200).send({ Rides, totalRide });
   } catch (error) {
@@ -173,7 +169,6 @@ router.post("/History", upload.none(), auth, async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 router.patch("/RideStatus/:id", upload.none(), auth, async (req, res) => {
-  console.log(req.body);
   if (!req.body.Status) return;
   try {
     let ride = await CreateRide.findById(req.params.id);
@@ -239,8 +234,6 @@ router.patch("/RideStatus/:id", upload.none(), auth, async (req, res) => {
 
 async function FilterQuery(Search, Status, Type, FromDate, toDate) {
   let filterConditions = [];
-
-  console.log(FromDate, toDate);
 
   if (Search && Search !== null && Search !== "null") {
     if (mongoose.Types.ObjectId.isValid(Search)) {
